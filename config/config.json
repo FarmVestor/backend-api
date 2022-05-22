@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "password1!",
-    "database": "farm",
+    "database": "farm2",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
