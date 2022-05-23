@@ -22,9 +22,9 @@ var authService = {
         }
         try {
             let decoded = jwt.verify(token, 'secretkey');
-            const admin = await models.Admin.findByPk(decoded.id)
-            if (admin) {
-                return admin
+            const user = await models.Users.findByPk(decoded.id)
+            if (user) {
+                return user
             } else {
                 return false
             }

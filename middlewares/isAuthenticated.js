@@ -4,6 +4,8 @@ exports.isAuthenticated = async function(req, res, next) {
     const token = req.headers?.authorization?.split(' ')[1]
     isVerfied = await authService.verifyUser(token);
     console.log('isVerfied', isVerfied)
+    console.log('token', token)
+
     if (isVerfied) {
         return next()
     }

@@ -10,6 +10,9 @@ exports.index = function (req, res) {
     models.Users.findAll({
         include: [
             models.Cities
+        ],
+        include: [
+            models.UserType
         ]
     })
         .then(users => {
@@ -107,4 +110,110 @@ exports.login = async function (req, res, next) {
             response.success = false
             res.send(response)
         });
+}
+
+exports.show = async function (req, res, next) {
+    const id = req.params.id
+    var response = {
+        success: false,
+        messages: [],
+        data: {}
+    }
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    const user = await models.Users.findByPk(id)
+    if (user) {
+        response.success = true;
+        response.data = user
+    } else {
+        response.messages.push("user not found")
+        res.status(404)
+    }
+    res.send(response)
+}
+
+exports.update = async function (req, res, next) {
+    let response = {
+        messages: [],
+        success: true,
+        data: {}
+    }
+    const id = req.params.id
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    if (!req.body?.userName?.length) {
+        response.messages.push("Please add a name")
+        response.success = false
+    }
+    if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(req.body?.userEmail))) {
+        response.messages.push("Please add a valid email")
+        response.success = false
+    }
+    if (req?.body?.userPassword != req?.body?.password_confirmation) {
+        response.messages.push("Your password and password confirmation do not match")
+        response.success = false
+    }
+    if (!response.success) {
+        res.send(response)
+        return
+    }
+    const updated = await models.Users.findByPk(id)
+    if (updated) {
+        if (req.body.userName) {
+            updated.userName = req.body.userName
+        }
+        if (req.body.userPassword) {
+            updated.userPassword = authService.hashPassword(req.body.userPassword)
+        }
+        if (req.body.userEmail) {
+            updated.userEmail = req.body.userEmail
+        }
+        updated.save().then((user) => {
+            response.messages.push('Successfully Updated')
+            response.success = true
+            response.data = user
+            res.send(response)
+        })
+    } else {
+        res.status(400);
+        response.messages.push('There was a problem updating the user.  Please check the user information.')
+        response.success = false
+        res.send(response)
+    }
+    
+}
+
+exports.delete = async function (req, res, next) {
+    let response = {
+        messages: [],
+        success: false,
+        data: {}
+    }
+    const id = req.params.id
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    const deleted = await models.Users.destroy({
+        where: {
+            id: id
+        }
+    })
+    if (deleted == 1) {
+        response.messages.push("User has been deleted")
+        response.success = true
+    } else {
+        response.messages.push("User has not been deleted")
+    }
+    res.send(response)
 }
