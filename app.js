@@ -9,7 +9,7 @@ var usersRouter = require('./routes/users');
 // var farmsRouter = require('./routes/farms');
 // var addressesRouter = require('./routes/addresses');
 // var dealsRouter = require('./routes/deals');
-// var requestsRouter = require('./routes/requests');
+var requestsRouter = require('./routes/requests');
 
 var app = express();
 //app.use(cors())
@@ -30,7 +30,7 @@ app.use('/users', usersRouter);
 // app.use('/farms', farmsRouter);
 // app.use('/addresses', addressesRouter);
 // app.use('/deals', dealsRouter);
-// app.use('/requests', requestsRouter);
+app.use('/requests', requestsRouter);
 
 
 // catch 404 and forward to error handler
