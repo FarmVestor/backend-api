@@ -20,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Governrates.init({
-    id: DataTypes.INTEGER,
     governrateName: DataTypes.STRING,
     countryId: DataTypes.INTEGER
   }, {

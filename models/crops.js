@@ -20,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Crops.init({
-    id: DataTypes.INTEGER,
     cropName: DataTypes.STRING
   }, {
     sequelize,

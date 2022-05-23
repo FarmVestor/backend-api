@@ -12,13 +12,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Deal.belongsTo(models.Users, {
-        foreignKey: 'userId',
-        as: userId
+        //foreignKey: 'userId',
+        as: "firstUser"
       }
       );
       Deal.belongsTo(models.Users, {
-        foreignKey: 'partenerId',
-        as: partenerId
+        //foreignKey: 'partenerId',
+        as: "secondUser"
       }
       );
     }

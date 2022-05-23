@@ -23,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Cities.init({
-    id: DataTypes.INTEGER,
     cityName: DataTypes.STRING,
     governrateId: DataTypes.INTEGER,
     latitude: DataTypes.DECIMAL,

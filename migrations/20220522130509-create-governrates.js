@@ -8,9 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id: {
-        type: Sequelize.INTEGER
-      },
+      
       governrateName: {
         type: Sequelize.STRING
       },
