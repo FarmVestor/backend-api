@@ -109,6 +109,7 @@ exports.index = function (req, res) {
         res.send(response)
     }
     exports.update = async function (req, res) {
+        
         var response = {
             success: true,
             message: [],

@@ -39,4 +39,11 @@ router.get('/:id', isAuthenticated, farmController.show);
 router.put('/:id', isAuthenticated, upload.single('farmPicture'),farmController.update);
 router.delete('/:id', isAuthenticated, farmController.delete);
 
+router.get('/farmKinds/all',farmController.FarmKindsindex);
+router.post('/farmKinds',farmController.FarmKindsstore);
+router.get('/farmKinds/:id', isAuthenticated, farmController.FarmKindsshow);
+router.put('/farmKinds/:id', isAuthenticated,farmController.FarmKindsupdate);
+router.delete('/farmKinds/:id', isAuthenticated, farmController.FarmKindsdelete);
+
+
 module.exports = router;

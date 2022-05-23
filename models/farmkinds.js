@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       FarmKinds.hasMany(models.Requests, {
         foreignKey: 'farmKindId'
       })
+      FarmKinds.hasMany(models.Farms, {
+        foreignKey: 'farmKindId'
+      })
     }
   }
   FarmKinds.init({

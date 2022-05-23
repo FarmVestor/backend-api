@@ -222,3 +222,153 @@ exports.delete = async function (req, res) {
     }
     res.send(response)
 }
+
+//FarmKinds Controllers/////
+
+exports.FarmKindsindex = async function (req, res) {
+    var response = {
+        success: false,
+        message: [],
+        data: {}
+    }
+
+
+    const farmKinds = await models.FarmKinds.findAll({
+        include: [{
+            model: models.Requests
+        },
+        {
+            model: models.Farms
+        },
+        ],
+
+    })
+            if (Array.isArray(farmKinds)) {
+                response.data = farmKinds
+                console.log("farmmmm",farmKinds)
+                response.success = true
+                res.send(response)
+            }
+    
+}
+
+exports.FarmKindsstore = async function (req, res) {
+    var response = {
+        success: true,
+        messages: [],
+        data: {}
+    }
+
+    const farmKind = req.body.farmKind
+  
+
+    if (!farmKind) {
+        response.messages.push('Please add a valid farm Kind')
+        response.success = false
+    }
+
+
+    if (response.success === true) {
+        await models.FarmKinds.create({
+            farmKind: req.body.farmKind,
+          
+
+
+        }).then(farmKind => {
+
+            response.messages.push('farm Kind added')
+            response.data = farmKind
+        })
+    }
+    res.send(response)
+}
+exports.FarmKindsshow = async function (req, res) 
+    {
+        var response = {
+            success: false,
+            message: [],
+            data: {}
+        }
+        const id = req.params.id
+        if (isNaN(id)) {
+            response.message.push("Please provide a valid ID")
+            response.success = false
+            res.send(response)
+            return
+        }
+        const Kind = await models.FarmKinds.findByPk(id, {
+            include: [
+                {model:models.Requests},
+                {model:models.Farms}
+            ]
+        })
+        if (Kind) {
+            response.success = true;
+            response.data = Kind
+        } else {
+            response.message.push("kind not found")
+            res.status(404)
+        }
+        res.send(response)
+    }
+    exports.FarmKindsupdate = async function (req, res) {
+        var response = {
+            success: true,
+            message: [],
+            data: {}
+        }
+        const id = req.params.id
+        if (isNaN(id)) {
+            response.message.push("Please provide a valid ID")
+            response.success = false
+            res.send(response)
+            return
+        }
+        const kind = await models.FarmKinds.findByPk(id)
+        if (kind) {
+            if (req.body.farmKind) {
+                kind.farmKind = req.body.farmKind
+                kind.save().then((kind) => {
+                response.data = kind
+                response.message.push("kind has been updated")
+                response.success = true
+                res.send(response)
+            })}
+            else{
+                response.message.push("You have to add a data to update")
+                res.send(response)
+            }
+            
+        } 
+        else {
+            response.message.push("not found")
+            res.send(response)
+        }
+        
+    }
+    exports.FarmKindsdelete = async function (req, res) {
+        var response = {
+            success: false,
+            message: [],
+            data: {}
+        }
+        const id = req.params.id
+        if (isNaN(id)) {
+            response.message.push("Please provide a valid ID")
+            response.success = false
+            res.send(response)
+            return
+        }
+        const deleted = await models.FarmKinds.destroy({
+            where: {
+                id: id
+            }
+        })
+        if (deleted == 1) {
+            response.message.push("kind has been deleted")
+            response.success = true
+        } else {
+            response.message.push("kind has not been deleted")
+        }
+        res.send(response)
+    }
