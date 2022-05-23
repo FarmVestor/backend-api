@@ -31,7 +31,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/farms', farmsRouter);
 // app.use('/addresses', addressesRouter);
-// app.use('/deals', dealsRouter);
 app.use('/requests', requestsRouter);
 app.use('/deals', dealsRouter);
 // app.use('/requests', requestsRouter);

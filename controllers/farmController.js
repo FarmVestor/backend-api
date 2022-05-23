@@ -222,3 +222,169 @@ exports.delete = async function (req, res) {
     }
     res.send(response)
 }
+
+//the crops controllers
+
+exports.cropsIndex = function (req, res) {
+    var response = {
+        success: false,
+        message: [],
+        data: {}
+    } 
+    models.Crops.findAll({
+        include: [
+           {
+            model:models.Requests,
+            
+           },
+           {
+            model:models.Farms,
+            
+           }
+        ]
+       
+    })
+        .then(crops => {
+            if (Array.isArray(crops)) {
+                response.data = crops
+                response.success = true
+            } else {
+                response.message.push("hi")
+            }
+        }).finally(() => {
+            res.send(response)
+        })
+   
+}
+
+exports.cropsStore = async function (req, res, next) {
+    var responce = {
+        success: true,
+        message: []
+    }
+   
+    console.log(req)
+
+    if (!req.body?.cropName?.length) {
+        responce.message.push("Please add a cropName")
+        responce.success = false
+    }
+   
+
+    if (responce.success === true) {
+        await models.Crops.create({
+            cropId: req.body.cropId,
+            cropName: req.body.cropName,
+         
+
+        }).then(newCrop => {
+            responce.data = newCrop
+            responce.message.push('Crop Added Successfuly')
+
+        })
+    }
+    res.send(responce)
+
+}
+
+exports.cropsShow = async function (req, res, next) {
+    const id = req.params.id
+    var response = {
+        success: false,
+        messages: [],
+        data: {}
+    }
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    const crop = await models.Crops.findByPk(id,{
+        include: [
+            {
+             model:models.Requests,
+             
+            },
+            {
+             model:models.Farms,
+             
+            }
+         ]
+    })
+    if (crop) {
+        response.success = true;
+        response.data = crop
+    } else {
+        response.messages.push("crop not found")
+        res.status(404)
+    }
+    res.send(response)
+}
+
+exports.cropsUpdate = async function (req, res, next) {
+    let response = {
+        messages: [],
+        success: true,
+        data: {}
+    }
+    const id = req.params.id
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    if (!req.body?.cropName?.length) {
+        response.messages.push("Please add a Crop")
+        response.success = false
+    }
+   
+    const updated = await models.Crops.findByPk(id)
+    if (updated) {
+        if (req.body.cropName) {
+            updated.cropName = req.body.cropName
+        }
+      
+        updated.save().then((crop) => {
+            response.messages.push('Successfully Updated')
+            response.success = true
+            response.data = crop
+            res.send(response)
+        })
+    } else {
+        res.status(400);
+        response.messages.push('There was a problem updating the user.  Please check the user information.')
+        response.success = false
+        res.send(response)
+    }
+    
+}
+
+
+exports.cropsDelete = async function (req, res, next) {
+    let response = {
+        messages: [],
+        success: false,
+        data: {}
+    }
+    const id = req.params.id
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    const deleted = await models.Crops.destroy({
+        where: {
+            id: id
+        }
+    })
+    if (deleted == 1) {
+        response.messages.push("Crops has been deleted")
+        response.success = true
+    } else {
+        response.messages.push("Crops has not been deleted")
+    }
+    res.send(response)
+}
