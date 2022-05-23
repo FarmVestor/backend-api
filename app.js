@@ -6,7 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-// var farmsRouter = require('./routes/farms');
+var farmsRouter = require('./routes/farms');
 // var addressesRouter = require('./routes/addresses');
 // var dealsRouter = require('./routes/deals');
 // var requestsRouter = require('./routes/requests');
@@ -27,7 +27,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-// app.use('/farms', farmsRouter);
+app.use('/farms', farmsRouter);
 // app.use('/addresses', addressesRouter);
 // app.use('/deals', dealsRouter);
 // app.use('/requests', requestsRouter);
