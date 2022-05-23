@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       Farms.belongsTo(models.Users,{
         foreignKey:"userId"
       });
+      
       Farms.belongsTo(models.Cities,{
         foreignKey:"cityId"
       });

@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         as: "firstUser"
       }
       );
+     
       Deal.belongsTo(models.Users, {
         foreignKey: 'partenerId',
         as: "secondUser"
