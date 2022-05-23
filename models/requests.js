@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       Requests.belongsTo(models.FarmKinds, {
         foreignKey: 'farmKindId',
       });
+      Requests.belongsTo(models.Crops, {
+        foreignKey: 'cropId',
+      });
     }
   }
   Requests.init({

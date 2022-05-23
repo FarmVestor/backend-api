@@ -5,10 +5,9 @@ const { isAuthenticated } = require('../middlewares/isAuthenticated');
 const { isDifferentAdmin } = require('../middlewares/isDifferentAdmin');
 
 router.get('/',isAuthenticated,requestsController.index);
-// router.post('/', isAuthenticated, requestsController.signup);
-// router.post('/login', requestsController.login);
-// router.get('/:id', isAuthenticated, requestsController.show);
-// router.put('/:id', isAuthenticated, requestsController.update);
-// router.delete('/:id', isAuthenticated, isDifferentAdmin, requestsController.delete);
+router.post('/', isAuthenticated, requestsController.store);
+router.get('/:id', isAuthenticated, requestsController.show);
+router.put('/:id', isAuthenticated, requestsController.update);
+router.delete('/:id', isAuthenticated, requestsController.delete);
 
 module.exports = router;
