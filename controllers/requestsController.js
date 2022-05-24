@@ -122,6 +122,27 @@ exports.index = function (req, res) {
             res.send(response)
             return
         }
+        if (!req.body?.farmKindId?.length) {
+            response.message.push("Please add a farm Kind ID")
+            response.success = false
+        }
+        if (!req.body?.farmArea?.length) {
+            response.message.push("Please add a farm Area ")
+            response.success = false
+        }
+        if (!req.body?.budget?.length) {
+            response.message.push("Please add a budget")
+            response.success = false
+        }
+        if (!req.body?.cropId?.length) {
+            response.message.push("Please add a cropId")
+            response.success = false
+        }
+        if (!response.success) {
+            res.send(response)
+            return
+        }
+
         const request = await models.Requests.findByPk(id)
         if (request) {
             if (req.body.farmKindId) {
