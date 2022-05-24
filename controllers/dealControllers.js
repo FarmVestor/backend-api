@@ -94,7 +94,18 @@ exports.show = async function (req, res, next) {
         res.send(response)
         return
     }
-    const deal = await models.Deal.findByPk(id)
+    const deal = await models.Deal.findByPk(id,{
+        include: [
+            {
+             model:models.Users,
+             as:'firstUser'
+            },
+            {
+             model:models.Users,
+             as:'secondUser'
+            }
+         ]
+    })
     if (deal) {
         response.success = true;
         response.data = deal
