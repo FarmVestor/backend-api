@@ -226,9 +226,6 @@ exports.delete = async function (req, res) {
 //FarmKinds Controllers/////
 
 exports.FarmKindsindex = async function (req, res) {
-//the crops controllers
-
-exports.cropsIndex = function (req, res) {
     var response = {
         success: false,
         message: [],
@@ -331,7 +328,7 @@ exports.FarmKindsshow = async function (req, res)
         if (kind) {
             if (req.body.farmKind) {
                 kind.farmKind = req.body.farmKind
-                kind.save().then((kind) => {
+                 kind.save().then((kind) => {
                 response.data = kind
                 response.message.push("kind has been updated")
                 response.success = true
@@ -375,6 +372,12 @@ exports.FarmKindsshow = async function (req, res)
         }
         res.send(response)
     }
+    //the crops controllers
+exports.cropsIndex = function (req, res) {
+    var response = {
+        success: false,
+        message: [],
+        data: {}
     } 
     models.Crops.findAll({
         include: [
@@ -401,7 +404,6 @@ exports.FarmKindsshow = async function (req, res)
         })
    
 }
-
 exports.cropsStore = async function (req, res, next) {
     var responce = {
         success: true,
@@ -409,29 +411,23 @@ exports.cropsStore = async function (req, res, next) {
     }
    
     console.log(req)
-
     if (!req.body?.cropName?.length) {
         responce.message.push("Please add a cropName")
         responce.success = false
     }
    
-
     if (responce.success === true) {
         await models.Crops.create({
             cropId: req.body.cropId,
             cropName: req.body.cropName,
          
-
         }).then(newCrop => {
             responce.data = newCrop
             responce.message.push('Crop Added Successfuly')
-
         })
     }
     res.send(responce)
-
 }
-
 exports.cropsShow = async function (req, res, next) {
     const id = req.params.id
     var response = {
@@ -446,16 +442,16 @@ exports.cropsShow = async function (req, res, next) {
         return
     }
     const crop = await models.Crops.findByPk(id,{
-        include: [
-            {
-             model:models.Requests,
-             
-            },
-            {
-             model:models.Farms,
-             
-            }
-         ]
+         include: [
+           {
+            model:models.Requests,
+            
+           },
+           {
+            model:models.Farms,
+            
+           }
+        ]
     })
     if (crop) {
         response.success = true;
@@ -466,7 +462,6 @@ exports.cropsShow = async function (req, res, next) {
     }
     res.send(response)
 }
-
 exports.cropsUpdate = async function (req, res, next) {
     let response = {
         messages: [],
@@ -505,8 +500,6 @@ exports.cropsUpdate = async function (req, res, next) {
     }
     
 }
-
-
 exports.cropsDelete = async function (req, res, next) {
     let response = {
         messages: [],
@@ -533,3 +526,15 @@ exports.cropsDelete = async function (req, res, next) {
     }
     res.send(response)
 }
+
+
+
+
+
+
+
+
+
+
+
+

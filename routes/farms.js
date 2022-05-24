@@ -40,6 +40,7 @@ router.get('/:id', isAuthenticated, farmController.show);
 router.put('/:id', isAuthenticated, upload.single('farmPicture'),farmController.update);
 router.delete('/:id', isAuthenticated, farmController.delete);
 
+//the farm/farmKinds routes 
 router.get('/farmKinds/all',farmController.FarmKindsindex);
 router.post('/farmKinds',farmController.FarmKindsstore);
 router.get('/farmKinds/:id', isAuthenticated, farmController.FarmKindsshow);
@@ -47,10 +48,10 @@ router.put('/farmKinds/:id', isAuthenticated,farmController.FarmKindsupdate);
 router.delete('/farmKinds/:id', isAuthenticated, farmController.FarmKindsdelete);
 
 //the farm/crops routes 
-router.get('/crops/all',cropsControllers.cropsIndex);
-router.post('/crops',cropsControllers.cropsStore);
-router.get('/crops/:id',cropsControllers.cropsShow);
-router.put('/crops/:id',cropsControllers.cropsUpdate);
-router.delete('/crops/:id',cropsControllers.cropsDelete);
+// router.get('/crops/all',cropsControllers.cropsIndex);
+// router.post('/crops',cropsControllers.cropsStore);
+// router.get('/crops/:id',cropsControllers.cropsShow);
+// router.put('/crops/:id',cropsControllers.cropsUpdate);
+// router.delete('/crops/:id',cropsControllers.cropsDelete);
 
 module.exports = router;
