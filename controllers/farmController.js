@@ -479,8 +479,13 @@ exports.cropsUpdate = async function (req, res, next) {
     if (!req.body?.cropName?.length) {
         response.messages.push("Please add a Crop")
         response.success = false
+        
     }
-   
+    if (!response.success) {
+        res.send(response)
+        return
+    }
+  
     const updated = await models.Crops.findByPk(id)
     if (updated) {
         if (req.body.cropName) {
