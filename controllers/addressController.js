@@ -70,7 +70,13 @@ exports.countryShow = async function (req, res, next) {
         res.send(response)
         return
     }
-    const country = await models.Countries.findByPk(id)
+    const country = await models.Countries.findByPk(id,{
+        include: [
+            {
+             model:models.Governrates,
+            }
+         ]
+    })
     if (country) {
         response.success = true;
         response.data = country
@@ -115,7 +121,7 @@ exports.countryUpdate = async function (req, res, next) {
         })
     } else {
         res.status(400);
-        response.messages.push('There was a problem updating the user.  Please check the user information.')
+        response.messages.push('There was a problem updating the country.  Please check the country information.')
         response.success = false
         res.send(response)
     } 
@@ -153,3 +159,354 @@ exports.countryDelete = async function (req, res, next) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//city controllers start
+exports.cityIndex = function (req, res) {
+    var response = {
+        success: false,
+        message: [],
+        data: {}
+    } 
+    models.Cities.findAll({
+        include: [
+           {
+            model:models.Users,
+           },
+           {
+            model:models.Farms,
+           }
+        ]
+       
+    })
+        .then(cities => {
+            if (Array.isArray(cities)) {
+                response.data = cities
+                response.success = true
+            } else {
+                response.message.push("hi")
+            }
+        }).finally(() => {
+            res.send(response)
+        })
+   
+}
+exports.cityStore = async function (req, res, next) {
+    var responce = {
+        success: true,
+        message: []
+    }
+   
+    console.log(req)
+
+    if (!req.body?.cityName?.length) {
+        responce.message.push("Please add a city Name")
+        responce.success = false
+    }
+    if (!req.body?.governrateId?.length) {
+        responce.message.push("Please add a governrateId")
+        responce.success = false
+    }
+    if (!req.body?.latitude?.length) {
+        responce.message.push("Please add a latitude")
+        responce.success = false
+    }
+    if (!req.body?.longitude?.length) {
+        responce.message.push("Please add a longitude")
+        responce.success = false
+    }
+    
+
+    if (responce.success === true) {
+        await models.Cities.create({
+            cityName: req.body.cityName,
+            governrateId: req.body.governrateId,
+            latitude: req.body.latitude,
+            longitude: req.body.longitude,
+
+        }).then(newCity => {
+            responce.data = newCity
+            responce.message.push('City Added Successfuly')
+
+        })
+    }
+    res.send(responce)
+
+}
+exports.cityShow = async function (req, res, next) {
+    const id = req.params.id
+    var response = {
+        success: false,
+        messages: [],
+        data: {}
+    }
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    const city = await models.Cities.findByPk(id,{
+        include: [
+            {
+             model:models.Users,
+            },
+            {
+             model:models.Farms,
+            }
+         ]
+    })
+    if (city) {
+        response.success = true;
+        response.data = city
+    } else {
+        response.messages.push("city not found")
+        res.status(404)
+    }
+    res.send(response)
+}
+exports.cityUpdate = async function (req, res, next) {
+    let response = {
+        messages: [],
+        success: true,
+        data: {}
+    }
+    const id = req.params.id
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    if (!req.body?.cityName?.length) {
+        response.messages.push("Please add a city Name")
+        response.success = false
+    }
+    if (!req.body?.governrateId?.length) {
+        response.messages.push("Please add a governrateId")
+        response.success = false
+    }
+    if (!req.body?.latitude?.length) {
+        response.messages.push("Please add a latitude")
+        response.success = false
+    }
+    if (!req.body?.longitude?.length) {
+        response.messages.push("Please add a longitude")
+        response.success = false
+    }
+    if (!response.success) {
+        res.send(response)
+        return
+    }
+    const updated = await models.Cities.findByPk(id)
+    if (updated) {
+        if (req.body.cityName) {
+            updated.cityName = req.body.cityName
+        }
+        if (req.body.governrateId) {
+            updated.governrateId = req.body.governrateId
+        }
+        if (req.body.latitude) {
+            updated.latitude = req.body.latitude
+        }
+        if (req.body.longitude) {
+            updated.longitude = req.body.longitude
+        }
+        
+        updated.save().then((city) => {
+            response.messages.push('Successfully Updated')
+            response.success = true
+            response.data = city
+            res.send(response)
+        })
+    } else {
+        res.status(400);
+        response.messages.push('There was a problem updating the city.  Please check the city information.')
+        response.success = false
+        res.send(response)
+    }
+    
+}
+exports.cityDelete = async function (req, res, next) {
+    let response = {
+        messages: [],
+        success: false,
+        data: {}
+    }
+    const id = req.params.id
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    const deleted = await models.Cities.destroy({
+        where: {
+            id: id
+        }
+    })
+    if (deleted == 1) {
+        response.messages.push("City has been deleted")
+        response.success = true
+    } else {
+        response.messages.push("City not found")
+    }
+    res.send(response)
+}
