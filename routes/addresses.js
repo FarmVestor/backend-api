@@ -12,11 +12,11 @@ const { isDifferentAdmin } = require('../middlewares/isDifferentAdmin');
 // router.delete('/country:id', isAuthenticated, isDifferentAdmin, addressController.countryDelete);
 
 //governrate routes
-// router.get('/governrate', isAuthenticated,addressController.governrateIndex);
-// router.post('/governrate', isAuthenticated,addressController.governrateStore);
-// router.get('/governrate:id', isAuthenticated, addressController.governrateShow);
-// router.put('/governrate:id', isAuthenticated, addressController.governrateUpdate);
-// router.delete('/governrate:id', isAuthenticated, isDifferentAdmin, addressController.governrateDelete);
+router.get('/governrate', isAuthenticated,addressController.governrateIndex);
+router.post('/governrate', isAuthenticated,addressController.governrateStore);
+router.get('/governrate/:id', isAuthenticated, addressController.governrateShow);
+router.put('/governrate/:id', isAuthenticated, addressController.governrateUpdate);
+router.delete('/governrate/:id', isAuthenticated, addressController.governrateDelete);
 
 //city routes
 // router.get('/city', isAuthenticated,addressController.cityIndex);
