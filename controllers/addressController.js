@@ -1,4 +1,5 @@
-
+var models = require('../models');
+var authService = require('../services/auth');
 
 //country controllers
 
