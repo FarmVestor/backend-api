@@ -8,10 +8,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var farmsRouter = require('./routes/farms');
 var addressesRouter = require('./routes/addresses');
-// var dealsRouter = require('./routes/deals');
 var requestsRouter = require('./routes/requests');
 var dealsRouter = require('./routes/deals');
-// var requestsRouter = require('./routes/requests');
 
 var app = express();
 //app.use(cors())
