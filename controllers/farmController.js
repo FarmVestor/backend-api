@@ -18,7 +18,12 @@ exports.index = async function (req, res) {
             model: models.Users
         },
         {
-            model: models.Crops
+            model: models.Crops,
+            as:"crop"
+        },
+        {
+            model: models.Crops,
+            as:"farmLastCrop"
         },
         {
             model: models.FarmKinds
@@ -104,7 +109,12 @@ exports.show = async function (req, res) {
             model: models.Users
         },
         {
-            model: models.Crops
+            model: models.Crops,
+            as:"crop"
+        },
+        {
+            model: models.Crops,
+            as:"farmLastCrop"
         },
         {
             model: models.FarmKinds
@@ -388,7 +398,11 @@ exports.cropsIndex = function (req, res) {
            },
            {
             model:models.Farms,
-            
+            as:"crop"
+           },
+           {
+            model:models.Farms,
+            as:"farmLastCrop"
            }
         ]
        
@@ -450,7 +464,11 @@ exports.cropsShow = async function (req, res, next) {
            },
            {
             model:models.Farms,
-            
+            as:"crop"
+           },
+           {
+            model:models.Farms,
+            as:"farmLastCrop"
            }
         ]
     })
