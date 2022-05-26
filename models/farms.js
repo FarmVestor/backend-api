@@ -21,9 +21,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:"farmKindId"
       });
       Farms.belongsTo(models.Crops,{
-        foreignKey:"cropId"
+        foreignKey:"cropId",
+        as:"first"
       });
-
+      Farms.belongsTo(models.Crops,{
+        foreignKey:"farmLastCropsId",
+        as:"second"
+      });
 
 
 

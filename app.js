@@ -3,13 +3,14 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var cors=require('cors')
+var cors =require('cors')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var farmsRouter = require('./routes/farms');
 var addressesRouter = require('./routes/addresses');
 var requestsRouter = require('./routes/requests');
 var dealsRouter = require('./routes/deals');
+require('dotenv').config()
 
 var app = express();
 app.use(cors())
