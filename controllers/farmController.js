@@ -4,6 +4,7 @@ var models = require('../models');
 var authService = require('../services/auth');
 const fs = require('fs')
 const sequelize = require('sequelize')
+var {farmTransformer,farmsTransformers}=require('../Transformaers/farmTransformers')
 
 exports.index = async function (req, res) {
     var response = {
@@ -19,11 +20,11 @@ exports.index = async function (req, res) {
         },
         {
             model: models.Crops,
-            as:"crop"
+            as:"first"
         },
         {
             model: models.Crops,
-            as:"farmLastCrop"
+            as:"second"
         },
         {
             model: models.FarmKinds
@@ -33,7 +34,8 @@ exports.index = async function (req, res) {
     })
        
             if (Array.isArray(farm)) {
-                response.data = farm
+                console.log(farm)
+                response.data =farmsTransformers(farm)
                 console.log("farmmmm",farm)
                 response.success = true
                 res.send(response)
@@ -75,8 +77,8 @@ exports.store = async function (req, res) {
             cityId: req.file.cityId,
             farmArea: req.body.farmArea,
             cropId: req.body.cropId,
-            farmAvialable: req.body.farmAvialable,
-            fatmKindId: req.body.fatmKindId,
+            farmAvailable: req.body.farmAvailable,
+            farmKindId: req.body.farmKindId,
             farmVisibiltiy: req.body.farmVisibiltiy,
             farmWaterSalinity: req.body.farmWaterSalinity,
             farmLastCropsId: req.body.farmLastCropsId,
@@ -85,6 +87,7 @@ exports.store = async function (req, res) {
             farmDescription: req.body.farmDescription,
             farmLicense: req.body.farmLicense,
         }).then(newfarm => {
+            response.message.push("Farms Added Successfully")
             response.data = newfarm
         })
     }
@@ -110,11 +113,11 @@ exports.show = async function (req, res) {
         },
         {
             model: models.Crops,
-            as:"crop"
+            as:"first"
         },
         {
             model: models.Crops,
-            as:"farmLastCrop"
+            as:"second"
         },
         {
             model: models.FarmKinds
@@ -123,7 +126,7 @@ exports.show = async function (req, res) {
     })
     if (farm) {
         response.success = true;
-        response.data = farm
+        response.data =farmTransformer(farm) 
     } else {
         response.message.push("farm not found")
         res.status(404)
@@ -193,7 +196,7 @@ exports.update = async function (req, res) {
             farm.picture = req.file.filename
         }
         farm.save().then((farm) => {
-            response.data = farm
+            response.data =farmTransformer(farm) 
             response.message.push("farm has been updated")
             response.success = true
             res.send(response)
@@ -395,14 +398,6 @@ exports.cropsIndex = function (req, res) {
            {
             model:models.Requests,
             
-           },
-           {
-            model:models.Farms,
-            as:"crop"
-           },
-           {
-            model:models.Farms,
-            as:"farmLastCrop"
            }
         ]
        
@@ -461,14 +456,6 @@ exports.cropsShow = async function (req, res, next) {
            {
             model:models.Requests,
             
-           },
-           {
-            model:models.Farms,
-            as:"crop"
-           },
-           {
-            model:models.Farms,
-            as:"farmLastCrop"
            }
         ]
     })

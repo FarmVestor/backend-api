@@ -10,6 +10,7 @@ var farmsRouter = require('./routes/farms');
 var addressesRouter = require('./routes/addresses');
 var requestsRouter = require('./routes/requests');
 var dealsRouter = require('./routes/deals');
+require('dotenv').config()
 
 var app = express();
 app.use(cors())

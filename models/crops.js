@@ -14,14 +14,15 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Crops.hasMany(models.Farms,{
         foreignKey:'cropId',
-        as:"crop"
+        as:"first"
       })
       Crops.hasMany(models.Farms,{
-        foreignKey:'farmLastCropId',
-        as:"farmLastCrop"
+        foreignKey:'farmLastCropsId',
+        as:"second"
       })
       Crops.hasMany(models.Requests,{
-        foreignKey:'cropId'
+        foreignKey:'cropId',
+       
       })
     }
   }
