@@ -34,9 +34,9 @@ exports.index = async function (req, res) {
     })
        
             if (Array.isArray(farm)) {
-                console.log(farm)
+                // console.log(farm)
                 response.data =farmsTransformers(farm)
-                console.log("farmmmm",farm)
+                // console.log("farmmmm",farm)
                 response.success = true
                 res.send(response)
             }
@@ -193,7 +193,8 @@ exports.update = async function (req, res) {
         }
         if (req.file) {
             fs.unlink('uploads/' + farm.farmPicture, () => { })
-            farm.picture = req.file.filename
+            farm.farmPicture = req.file.filename
+            //console.log(req.file)
         }
         farm.save().then((farm) => {
             response.data =farmTransformer(farm) 
@@ -258,7 +259,7 @@ exports.FarmKindsindex = async function (req, res) {
     })
             if (Array.isArray(farmKinds)) {
                 response.data = farmKinds
-                console.log("farmmmm",farmKinds)
+                // console.log("farmmmm",farmKinds)
                 response.success = true
                 res.send(response)
             }
@@ -420,7 +421,7 @@ exports.cropsStore = async function (req, res, next) {
         message: []
     }
    
-    console.log(req)
+    // console.log(req)
     if (!req.body?.cropName?.length) {
         responce.message.push("Please add a cropName")
         responce.success = false
