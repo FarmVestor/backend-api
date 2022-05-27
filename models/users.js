@@ -14,13 +14,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'userId'
       });  
       
-      Users.hasMany(models.Deal, {
-        foreignKey: 'userId',
-        as: "firstUser"
-              })
+      // Users.hasMany(models.Deal, {
+      //   foreignKey: 'userId',
+      //   as: "firstUser"
+      //         })
         Users.hasMany(models.Deal, {
        foreignKey: 'partenerId',
-        as: "secondUser"
+        as: "Partner"
       })
       Users.belongsTo(models.Cities,{
         foreignKey: 'cityId'
