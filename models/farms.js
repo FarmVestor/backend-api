@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:"userId"
       });
       
+      Farms.hasMany(models.Deal,{
+        foreignKey:"farmId"
+        
+      });
+      
       Farms.belongsTo(models.Cities,{
         foreignKey:"cityId"
       });

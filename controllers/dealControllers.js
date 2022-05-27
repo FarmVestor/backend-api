@@ -4,18 +4,20 @@ var authService = require('../services/auth');
 exports.index = function (req, res) {
     var response = {
         success: false,
-        message: [],
+        messages: [],
         data: {}
     } 
     models.Deal.findAll({
         include: [
            {
-            model:models.Users,
-            as:'firstUser'
+            model:models.Farms,
+            include:[models.Users]
+            
+            
            },
            {
             model:models.Users,
-            as:'secondUser'
+            as:'Partner'
            }
         ]
        
@@ -25,7 +27,7 @@ exports.index = function (req, res) {
                 response.data = deals
                 response.success = true
             } else {
-                response.message.push("hi")
+                response.messages.push("hi")
             }
         }).finally(() => {
             res.send(response)
@@ -36,44 +38,49 @@ exports.index = function (req, res) {
 exports.store = async function (req, res, next) {
     var responce = {
         success: true,
-        message: []
+        messages: []
     }
    
     console.log(req)
 
    // const userId = req.body.userId
     // if (userId.length < 3) {
-    //     responce.message.push('please add a valid userId')
+    //     responce.messages.push('please add a valid userId')
     //     responce.success = false
     // }
-    if (!req.body?.userId?.length) {
-        responce.message.push("Please add a userId")
+    if (!req.body?.farmId?.length) {
+        responce.messages.push("Please add a userId")
         responce.success = false
     }
+    // if (!req.body?.userId?.length) {
+    //     responce.messages.push("Please add a userId")
+    //     responce.success = false
+    // }
     if (!req.body?.partenerId?.length) {
-        responce.message.push("Please add a partenerId")
+        responce.messages.push("Please add a partenerId")
         responce.success = false
     }
     if (!req.body?.dealPrice?.length) {
-        responce.message.push("Please add a dealPrice")
+        responce.messages.push("Please add a dealPrice")
         responce.success = false
     }
     if (!req.body?.dealStatus?.length) {
-        responce.message.push("Please add a dealStatus")
+        responce.messages.push("Please add a dealStatus")
         responce.success = false
     }
     
 
     if (responce.success === true) {
         await models.Deal.create({
-            userId: req.body.userId,
+            farmId:req.body.farmId,
+            // userId: req.body.userId,
             partenerId: req.body.partenerId,
             dealPrice: req.body.dealPrice,
             dealStatus: req.body.dealStatus,
 
         }).then(newDeal => {
             responce.data = newDeal
-            responce.message.push('Deal Added Successfuly')
+            responce.messages.push('Deal Added Successfuly')
 
         })
     }
@@ -97,12 +104,14 @@ exports.show = async function (req, res, next) {
     const deal = await models.Deal.findByPk(id,{
         include: [
             {
-             model:models.Users,
-             as:'firstUser'
+             model:models.Farms,
+             include:[models.Users]
+             
+             
             },
             {
              model:models.Users,
-             as:'secondUser'
+             as:'Partner'
             }
          ]
     })
@@ -129,10 +138,10 @@ exports.update = async function (req, res, next) {
         res.send(response)
         return
     }
-    if (!req.body?.userId?.length) {
-        response.messages.push("Please add a user ID")
-        response.success = false
-    }
+    // if (!req.body?.userId?.length) {
+    //     response.messages.push("Please add a user ID")
+    //     response.success = false
+    // }
     if (!req.body?.partenerId?.length) {
         response.messages.push("Please add a Partner ID")
         response.success = false
