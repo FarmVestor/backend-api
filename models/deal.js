@@ -18,17 +18,22 @@ module.exports = (sequelize, DataTypes) => {
       );
      
       Deal.belongsTo(models.Users, {
-        foreignKey: 'partenerId',
-        as: "Partner"
+        foreignKey: 'agentId',
+        as: "agent"
+      }
+      );
+      Deal.belongsTo(models.Users, {
+        foreignKey: 'investorId',
+        as: "investor"
       }
       );
     }
   }
   Deal.init({
-    farmId: DataTypes.NUMBER,
-    userId: DataTypes.NUMBER,
-    partenerId: DataTypes.NUMBER,
-    dealPrice: DataTypes.NUMBER,
+    farmId: DataTypes.INTEGER,
+    agentId: DataTypes.INTEGER,
+    investorId: DataTypes.INTEGER,
+    dealPrice: DataTypes.INTEGER,
     dealStatus: DataTypes.BOOLEAN
   }, {
     sequelize,

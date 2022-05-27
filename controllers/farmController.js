@@ -9,7 +9,7 @@ var {farmTransformer,farmsTransformers}=require('../Transformaers/farmTransforme
 exports.index = async function (req, res) {
     var response = {
         success: true,
-        message: [],
+        messages: [],
         data: {}
     }
 
@@ -28,6 +28,9 @@ exports.index = async function (req, res) {
         },
         {
             model: models.FarmKinds
+        },
+        {
+            model: models.Deal
         }
         ],
 
@@ -48,7 +51,7 @@ exports.index = async function (req, res) {
 exports.store = async function (req, res) {
     var response = {
         success: true,
-        message: [],
+        messages: [],
         data: {}
     }
 
@@ -58,12 +61,12 @@ exports.store = async function (req, res) {
     //     !req.body.farmAvialable || !req.body.farmKindId || !req.body.farmVisibiltiy ||
     //     !req.body.farmWaterSalinity || !req.body.farmLastCropsId || !req.body.farmFertilizer ||
     //     !req.body.farmTreesAge || !req.body.farmDescription    ) {
-    //     response.message.push('please fill out all the fields')
+    //     response.messages.push('please fill out all the fields')
     //     response.success = false
     // }
     
     if (!req.file) {
-        response.message.push('Please add a photo')
+        response.messages.push('Please add a photo')
         response.success = false
         res.send(response)
         return
@@ -87,7 +90,7 @@ exports.store = async function (req, res) {
             farmDescription: req.body.farmDescription,
             farmLicense: req.body.farmLicense,
         }).then(newfarm => {
-            response.message.push("Farms Added Successfully")
+            response.messages.push("Farms Added Successfully")
             response.data = newfarm
         })
     }
@@ -97,12 +100,12 @@ exports.store = async function (req, res) {
 exports.show = async function (req, res) {
     var response = {
         success: false,
-        message: [],
+        messages: [],
         data: {}
     }
     const id = req.params.id
     if (isNaN(id)) {
-        response.message.push("Please provide a valid ID")
+        response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
         return
@@ -121,6 +124,9 @@ exports.show = async function (req, res) {
         },
         {
             model: models.FarmKinds
+        },
+        {
+            model: models.Deal
         }
         ],
     })
@@ -128,7 +134,7 @@ exports.show = async function (req, res) {
         response.success = true;
         response.data =farmTransformer(farm) 
     } else {
-        response.message.push("farm not found")
+        response.messages.push("farm not found")
         res.status(404)
     }
     res.send(response)
@@ -137,12 +143,12 @@ exports.show = async function (req, res) {
 exports.update = async function (req, res) {
     var response = {
         success: true,
-        message: [],
+        messages: [],
         data: {}
     }
     const id = req.params.id
     if (isNaN(id)) {
-        response.message.push("Please provide a valid ID")
+        response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
         return
@@ -197,13 +203,13 @@ exports.update = async function (req, res) {
         }
         farm.save().then((farm) => {
             response.data =farmTransformer(farm) 
-            response.message.push("farm has been updated")
+            response.messages.push("farm has been updated")
             response.success = true
             res.send(response)
         })
         
     } else {
-        response.message.push("not found")
+        response.messages.push("not found")
         res.send(response)
     }
     
@@ -212,12 +218,12 @@ exports.update = async function (req, res) {
 exports.delete = async function (req, res) {
     var response = {
         success: false,
-        message: [],
+        messages: [],
         data: {}
     }
     const id = req.params.id
     if (isNaN(id)) {
-        response.message.push("Please provide a valid ID")
+        response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
         return
@@ -228,10 +234,10 @@ exports.delete = async function (req, res) {
         }
     })
     if (deleted == 1) {
-        response.message.push("Place has been deleted")
+        response.messages.push("Place has been deleted")
         response.success = true
     } else {
-        response.message.push("Place has not been deleted")
+        response.messages.push("Place has not been deleted")
     }
     res.send(response)
 }
@@ -241,7 +247,7 @@ exports.delete = async function (req, res) {
 exports.FarmKindsindex = async function (req, res) {
     var response = {
         success: false,
-        message: [],
+        messages: [],
         data: {}
     }
 
@@ -299,12 +305,12 @@ exports.FarmKindsshow = async function (req, res)
     {
         var response = {
             success: false,
-            message: [],
+            messages: [],
             data: {}
         }
         const id = req.params.id
         if (isNaN(id)) {
-            response.message.push("Please provide a valid ID")
+            response.messages.push("Please provide a valid ID")
             response.success = false
             res.send(response)
             return
@@ -319,7 +325,7 @@ exports.FarmKindsshow = async function (req, res)
             response.success = true;
             response.data = Kind
         } else {
-            response.message.push("kind not found")
+            response.messages.push("kind not found")
             res.status(404)
         }
         res.send(response)
@@ -327,12 +333,12 @@ exports.FarmKindsshow = async function (req, res)
     exports.FarmKindsupdate = async function (req, res) {
         var response = {
             success: true,
-            message: [],
+            messages: [],
             data: {}
         }
         const id = req.params.id
         if (isNaN(id)) {
-            response.message.push("Please provide a valid ID")
+            response.messages.push("Please provide a valid ID")
             response.success = false
             res.send(response)
             return
@@ -343,18 +349,18 @@ exports.FarmKindsshow = async function (req, res)
                 kind.farmKind = req.body.farmKind
                  kind.save().then((kind) => {
                 response.data = kind
-                response.message.push("kind has been updated")
+                response.messages.push("kind has been updated")
                 response.success = true
                 res.send(response)
             })}
             else{
-                response.message.push("You have to add a data to update")
+                response.messages.push("You have to add a data to update")
                 res.send(response)
             }
             
         } 
         else {
-            response.message.push("not found")
+            response.messages.push("not found")
             res.send(response)
         }
         
@@ -362,12 +368,12 @@ exports.FarmKindsshow = async function (req, res)
     exports.FarmKindsdelete = async function (req, res) {
         var response = {
             success: false,
-            message: [],
+            messages: [],
             data: {}
         }
         const id = req.params.id
         if (isNaN(id)) {
-            response.message.push("Please provide a valid ID")
+            response.messages.push("Please provide a valid ID")
             response.success = false
             res.send(response)
             return
@@ -378,10 +384,10 @@ exports.FarmKindsshow = async function (req, res)
             }
         })
         if (deleted == 1) {
-            response.message.push("kind has been deleted")
+            response.messages.push("kind has been deleted")
             response.success = true
         } else {
-            response.message.push("kind has not been deleted")
+            response.messages.push("kind has not been deleted")
         }
         res.send(response)
     }
@@ -390,7 +396,7 @@ exports.FarmKindsshow = async function (req, res)
 exports.cropsIndex = function (req, res) {
     var response = {
         success: false,
-        message: [],
+        messages: [],
         data: {}
     } 
     models.Crops.findAll({
@@ -407,7 +413,7 @@ exports.cropsIndex = function (req, res) {
                 response.data = crops
                 response.success = true
             } else {
-                response.message.push("hi")
+                response.messages.push("hi")
             }
         }).finally(() => {
             res.send(response)
@@ -415,28 +421,28 @@ exports.cropsIndex = function (req, res) {
    
 }
 exports.cropsStore = async function (req, res, next) {
-    var responce = {
+    var response = {
         success: true,
-        message: []
+        messages: []
     }
    
     console.log(req)
-    if (!req.body?.cropName?.length) {
-        responce.message.push("Please add a cropName")
-        responce.success = false
+    if (!req.body?.cropName) {
+        response.messages.push("Please add a cropName")
+        response.success = false
     }
    
-    if (responce.success === true) {
+    if (response.success === true) {
         await models.Crops.create({
             cropId: req.body.cropId,
             cropName: req.body.cropName,
          
         }).then(newCrop => {
-            responce.data = newCrop
-            responce.message.push('Crop Added Successfuly')
+            response.data = newCrop
+            response.messages.push('Crop Added Successfuly')
         })
     }
-    res.send(responce)
+    res.send(response)
 }
 exports.cropsShow = async function (req, res, next) {
     const id = req.params.id
@@ -481,7 +487,7 @@ exports.cropsUpdate = async function (req, res, next) {
         res.send(response)
         return
     }
-    if (!req.body?.cropName?.length) {
+    if (!req.body?.cropName) {
         response.messages.push("Please add a Crop")
         response.success = false
         

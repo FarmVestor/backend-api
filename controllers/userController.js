@@ -14,12 +14,14 @@ exports.index = function (req, res) {
         order: [
             ['userName', order]
         ],
-        include: [
-            models.Cities
+        include: [{
+            model:models.Cities,
+            model:models.UserType,
+            model:models.Requests
+        }
+            
         ],
-        include: [
-            models.UserType
-        ],
+       
         where: {userTypeId:id}
     })
         .then(users => {
@@ -40,7 +42,7 @@ exports.signup = async function (req, res, next) {
         messages: [],
         data: {}
     }
-    if (!req.body?.userName?.length) {
+    if (!req.body?.userName) {
         response.messages.push("Please add a name")
         response.success = false
     }
@@ -56,7 +58,7 @@ exports.signup = async function (req, res, next) {
         response.messages.push("Please add a valid email")
         response.success = false
     }
-    if (req?.body?.userPassword?.length < 6) {
+    if (req?.body?.userPassword < 6) {
         response.messages.push("Please add a valid password")
         response.success = false
     }
@@ -142,7 +144,15 @@ exports.show = async function (req, res, next) {
         res.send(response)
         return
     }
-    const user = await models.Users.findByPk(id)
+    const user = await models.Users.findByPk(id,{
+        include: [{
+            model:models.Cities,
+            model:models.UserType,
+            model:models.Requests
+        }
+            
+        ],
+    })
     if (user) {
         response.success = true;
         response.data = user
@@ -166,7 +176,7 @@ exports.update = async function (req, res, next) {
         res.send(response)
         return
     }
-    if (!req.body?.userName?.length) {
+    if (!req.body?.userName) {
         response.messages.push("Please add a name")
         response.success = false
     }
@@ -293,7 +303,7 @@ exports.storeUserType = async function (req, res, next) {
         messages: [],
         data: {}
     }
-    if (!req.body?.userType?.length) {
+    if (!req.body?.userType) {
         response.messages.push("Please add a name")
         response.success = false
     }
@@ -334,7 +344,7 @@ exports.updateUSerType = async function (req, res, next) {
         res.send(response)
         return
     }
-    if (!req.body?.userType?.length) {
+    if (!req.body?.userType) {
         response.messages.push("Please add a name")
         response.success = false
     }

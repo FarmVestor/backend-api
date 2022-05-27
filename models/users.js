@@ -19,9 +19,17 @@ module.exports = (sequelize, DataTypes) => {
       //   as: "firstUser"
       //         })
         Users.hasMany(models.Deal, {
-       foreignKey: 'partenerId',
-        as: "Partner"
+       foreignKey: 'agentId',
+        as: "agent"
       })
+      Users.hasMany(models.Deal, {
+        foreignKey: 'investorId',
+         as: "investor"
+       })
+      Users.hasMany(models.Requests, {
+        foreignKey: 'userId',
+         
+       })
       Users.belongsTo(models.Cities,{
         foreignKey: 'cityId'
       });
