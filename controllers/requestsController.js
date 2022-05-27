@@ -122,19 +122,19 @@ exports.index = function (req, res) {
             res.send(response)
             return
         }
-        if (!req.body?.farmKindId?.length) {
+        if (!req.body?.farmKindId) {
             response.message.push("Please add a farm Kind ID")
             response.success = false
         }
-        if (!req.body?.farmArea?.length) {
+        if (!req.body?.farmArea) {
             response.message.push("Please add a farm Area ")
             response.success = false
         }
-        if (!req.body?.budget?.length) {
+        if (!req.body?.budget) {
             response.message.push("Please add a budget")
             response.success = false
         }
-        if (!req.body?.cropId?.length) {
+        if (!req.body?.cropId) {
             response.message.push("Please add a cropId")
             response.success = false
         }
