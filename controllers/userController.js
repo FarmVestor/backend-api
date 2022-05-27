@@ -4,23 +4,32 @@ var authService = require('../services/auth');
 exports.index = function (req, res) {
     var response = {
         success: false,
-        message: [],
+        messages: [],
         data: {}
     }
+    const order = req.query.order == 'ASC' ? 'ASC' : 'DESC'
+    const id = req.query.id
+    console.log("idddd",id)
     models.Users.findAll({
-        include: [
-            models.Cities
+        order: [
+            ['userName', order]
         ],
-        include: [
-            models.UserType
-        ]
+        include: [{
+            model:models.Cities,
+            model:models.UserType,
+            model:models.Requests
+        }
+            
+        ],
+       
+        where: {userTypeId:id}
     })
         .then(users => {
             if (Array.isArray(users)) {
                 response.data = users
                 response.success = true
             } else {
-                response.message.push("hi")
+                response.messages.push("hi")
             }
         }).finally(() => {
             res.send(response)
@@ -33,15 +42,23 @@ exports.signup = async function (req, res, next) {
         messages: [],
         data: {}
     }
-    if (!req.body?.userName?.length) {
+    if (!req.body?.userName) {
         response.messages.push("Please add a name")
+        response.success = false
+    }
+    if (!req.body?.userPhone) {
+        response.messages.push("Please add a phone number")
+        response.success = false
+    }
+    if (!req.body?.userTypeId) {
+        response.messages.push("Please add a userType")
         response.success = false
     }
     if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(req.body?.userEmail))) {
         response.messages.push("Please add a valid email")
         response.success = false
     }
-    if (req?.body?.userPassword?.length < 6) {
+    if (req?.body?.userPassword < 6) {
         response.messages.push("Please add a valid password")
         response.success = false
     }
@@ -59,6 +76,8 @@ exports.signup = async function (req, res, next) {
         },
         defaults: {
             userName: req.body.userName,
+            userPhone:req.body.userPhone,
+            userTypeId:req.body.userTypeId,
             userPassword: authService.hashPassword(req.body.userPassword)
         }
     });
@@ -125,7 +144,15 @@ exports.show = async function (req, res, next) {
         res.send(response)
         return
     }
-    const user = await models.Users.findByPk(id)
+    const user = await models.Users.findByPk(id,{
+        include: [{
+            model:models.Cities,
+            model:models.UserType,
+            model:models.Requests
+        }
+            
+        ],
+    })
     if (user) {
         response.success = true;
         response.data = user
@@ -149,7 +176,7 @@ exports.update = async function (req, res, next) {
         res.send(response)
         return
     }
-    if (!req.body?.userName?.length) {
+    if (!req.body?.userName) {
         response.messages.push("Please add a name")
         response.success = false
     }
@@ -205,6 +232,163 @@ exports.delete = async function (req, res, next) {
         return
     }
     const deleted = await models.Users.destroy({
+        where: {
+            id: id
+        }
+    })
+    if (deleted == 1) {
+        response.messages.push("User has been deleted")
+        response.success = true
+    } else {
+        response.messages.push("User has not been deleted")
+    }
+    res.send(response)
+}
+
+
+/// userType Routes
+exports.indexUserType = function (req, res) {
+    var response = {
+        success: false,
+        messages: [],
+        data: {}
+    }
+    
+    models.UserType.findAll({
+        include: [
+            models.Users
+        ],
+        
+    })
+        .then(userType => {
+            if (Array.isArray(userType)) {
+                response.data = userType
+                response.success = true
+            } else {
+                response.messages.push("hi")
+            }
+        }).finally(() => {
+            res.send(response)
+        })
+}
+
+
+exports.showUserType = async function (req, res, next) {
+    const id = req.params.id
+    var response = {
+        success: false,
+        messages: [],
+        data: {}
+    }
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    const userType = await models.UserType.findByPk(id)
+    if (userType) {
+        response.success = true;
+        response.data = userType
+    } else {
+        response.messages.push("userType not found")
+        res.status(404)
+    }
+    res.send(response)
+}
+
+exports.storeUserType = async function (req, res, next) {
+    var response = {
+        success: true,
+        messages: [],
+        data: {}
+    }
+    if (!req.body?.userType) {
+        response.messages.push("Please add a name")
+        response.success = false
+    }
+    
+    if (!response.success) {
+        res.send(response)
+        return
+    }
+    const [userType, created] = await models.UserType.findOrCreate({
+        where: {
+            userType: req.body.userType
+        },
+        defaults: {
+            userType: req.body.userType
+        }
+    });
+    if (created) {
+        response.messages.push("UserType successfully created")
+        response.success = true
+        res.send(response);
+    } else {
+        response.messages.push("This userType already exists")
+        response.success = false
+        res.send(response);
+    }
+}
+
+exports.updateUSerType = async function (req, res, next) {
+    let response = {
+        messages: [],
+        success: true,
+        data: {}
+    }
+    const id = req.params.id
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    if (!req.body?.userType) {
+        response.messages.push("Please add a name")
+        response.success = false
+    }
+    
+    if (!response.success) {
+        res.send(response)
+        return
+    }
+    const updated = await models.UserType.findByPk(id)
+    if (updated) {
+        if (req.body.userType) {
+            updated.userType = req.body.userType
+        }
+        
+        updated.save().then((userType) => {
+            response.messages.push('Successfully Updated')
+            response.success = true
+            response.data = userType
+            res.send(response)
+        })
+    } else {
+        res.status(400);
+        response.messages.push('There was a problem updating the user.  Please check the userType information.')
+        response.success = false
+        res.send(response)
+    }
+    
+}
+
+
+exports.deleteUserType = async function (req, res, next) {
+    let response = {
+        messages: [],
+        success: false,
+        data: {}
+    }
+    const id = req.params.id
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    const deleted = await models.UserType.destroy({
         where: {
             id: id
         }

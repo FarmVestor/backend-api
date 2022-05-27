@@ -6,7 +6,7 @@ var authService = require('../services/auth');
 exports.countryIndex = function (req, res) {
     var response = {
         success: false,
-        message: [],
+        messages: [],
         data: {}
     } 
     models.Countries.findAll({
@@ -22,7 +22,7 @@ exports.countryIndex = function (req, res) {
                 response.data = countries
                 response.success = true
             } else {
-                response.message.push("hi")
+                response.messages.push("hi")
             }
         }).finally(() => {
             res.send(response)
@@ -30,31 +30,31 @@ exports.countryIndex = function (req, res) {
    
 }
 exports.countryStore = async function (req, res, next) {
-    var responce = {
+    var response = {
         success: true,
-        message: []
+        messages: []
     }
    
     console.log(req)
 
-    if (!req.body?.countryName?.length) {
-        responce.message.push("Please add a country Name")
-        responce.success = false
+    if (!req.body?.countryName) {
+        response.messages.push("Please add a country Name")
+        response.success = false
     }
-    if (!responce.success) {
-        res.send(responce)
+    if (!response.success) {
+        res.send(response)
         return
     }
-    if (responce.success === true) {
+    if (response.success === true) {
         await models.Countries.create({
             countryName: req.body.countryName,
         }).then(newCountry => {
-            responce.data = newCountry
-            responce.message.push('Country Added Successfuly')
+            response.data = newCountry
+            response.messages.push('Country Added Successfuly')
 
         })
     }
-    res.send(responce)
+    res.send(response)
 
 }
 exports.countryShow = async function (req, res, next) {
@@ -99,7 +99,7 @@ exports.countryUpdate = async function (req, res, next) {
         res.send(response)
         return
     }
-    if (!req.body?.countryName?.length) {
+    if (!req.body?.countryName) {
         response.messages.push("Please add a country name")
         response.success = false
     }
@@ -157,7 +157,7 @@ exports.countryDelete = async function (req, res, next) {
 exports.governrateIndex = function (req, res) {
     var response = {
         success: false,
-        message: [],
+        messages: [],
         data: {}
     }
     models.Governrates.findAll({
@@ -172,7 +172,7 @@ exports.governrateIndex = function (req, res) {
                 response.data = governrate
                 response.success = true
             } else {
-                response.message.push("hi")
+                response.messages.push("hi")
             }
         }).finally(() => {
             res.send(response)
@@ -219,12 +219,12 @@ exports.governrateShow = async function (req, res)
 {
     var response = {
         success: false,
-        message: [],
+        messages: [],
         data: {}
     }
     const id = req.params.id
     if (isNaN(id)) {
-        response.message.push("Please provide a valid ID")
+        response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
         return
@@ -239,7 +239,7 @@ exports.governrateShow = async function (req, res)
         response.success = true;
         response.data = governrate
     } else {
-        response.message.push("governrate not found")
+        response.messages.push("governrate not found")
         res.status(404)
     }
     res.send(response)
@@ -248,22 +248,22 @@ exports.governrateUpdate = async function (req, res) {
         
     var response = {
         success: true,
-        message: [],
+        messages: [],
         data: {}
     }
     const id = req.params.id
     if (isNaN(id)) {
-        response.message.push("Please provide a valid ID")
+        response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
         return
     }
-    if (!req.body?.governrateName?.length) {
-        response.message.push("Please add a farm governrate Name")
+    if (!req.body?.governrateName) {
+        response.messages.push("Please add a farm governrate Name")
         response.success = false
     }
-    if (!req.body?.countryId?.length) {
-        response.message.push("Please add a country Id ")
+    if (!req.body?.countryId) {
+        response.messages.push("Please add a country Id ")
         response.success = false
     }
     
@@ -283,13 +283,13 @@ exports.governrateUpdate = async function (req, res) {
        
         governrate.save().then((governrate) => {
             response.data = governrate
-            response.message.push("governrate has been updated")
+            response.messages.push("governrate has been updated")
             response.success = true
             res.send(response)
         })
         
     } else {
-        response.message.push("not found")
+        response.messages.push("not found")
         res.send(response)
     }
     
@@ -297,12 +297,12 @@ exports.governrateUpdate = async function (req, res) {
 exports.governrateDelete = async function (req, res) {
     var response = {
         success: false,
-        message: [],
+        messages: [],
         data: {}
     }
     const id = req.params.id
     if (isNaN(id)) {
-        response.message.push("Please provide a valid ID")
+        response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
         return
@@ -313,10 +313,10 @@ exports.governrateDelete = async function (req, res) {
         }
     })
     if (deleted == 1) {
-        response.message.push("governrate has been deleted")
+        response.messages.push("governrate has been deleted")
         response.success = true
     } else {
-        response.message.push("governrate has not been deleted")
+        response.messages.push("governrate has not been deleted")
     }
     res.send(response)
 }
@@ -325,7 +325,7 @@ exports.governrateDelete = async function (req, res) {
 exports.cityIndex = function (req, res) {
     var response = {
         success: false,
-        message: [],
+        messages: [],
         data: {}
     } 
     models.Cities.findAll({
@@ -344,7 +344,7 @@ exports.cityIndex = function (req, res) {
                 response.data = cities
                 response.success = true
             } else {
-                response.message.push("hi")
+                response.messages.push("hi")
             }
         }).finally(() => {
             res.send(response)
@@ -352,32 +352,32 @@ exports.cityIndex = function (req, res) {
    
 }
 exports.cityStore = async function (req, res, next) {
-    var responce = {
+    var response = {
         success: true,
-        message: []
+        messages: []
     }
    
     console.log(req)
 
-    if (!req.body?.cityName?.length) {
-        responce.message.push("Please add a city Name")
-        responce.success = false
+    if (!req.body?.cityName) {
+        response.messages.push("Please add a city Name")
+        response.success = false
     }
-    if (!req.body?.governrateId?.length) {
-        responce.message.push("Please add a governrateId")
-        responce.success = false
+    if (!req.body?.governrateId) {
+        response.messages.push("Please add a governrateId")
+        response.success = false
     }
-    if (!req.body?.latitude?.length) {
-        responce.message.push("Please add a latitude")
-        responce.success = false
+    if (!req.body?.latitude) {
+        response.messages.push("Please add a latitude")
+        response.success = false
     }
-    if (!req.body?.longitude?.length) {
-        responce.message.push("Please add a longitude")
-        responce.success = false
+    if (!req.body?.longitude) {
+        response.messages.push("Please add a longitude")
+        response.success = false
     }
     
 
-    if (responce.success === true) {
+    if (response.success === true) {
         await models.Cities.create({
             cityName: req.body.cityName,
             governrateId: req.body.governrateId,
@@ -385,12 +385,12 @@ exports.cityStore = async function (req, res, next) {
             longitude: req.body.longitude,
 
         }).then(newCity => {
-            responce.data = newCity
-            responce.message.push('City Added Successfuly')
+            response.data = newCity
+            response.messages.push('City Added Successfuly')
 
         })
     }
-    res.send(responce)
+    res.send(response)
 
 }
 exports.cityShow = async function (req, res, next) {
@@ -438,19 +438,19 @@ exports.cityUpdate = async function (req, res, next) {
         res.send(response)
         return
     }
-    if (!req.body?.cityName?.length) {
+    if (!req.body?.cityName) {
         response.messages.push("Please add a city Name")
         response.success = false
     }
-    if (!req.body?.governrateId?.length) {
+    if (!req.body?.governrateId) {
         response.messages.push("Please add a governrateId")
         response.success = false
     }
-    if (!req.body?.latitude?.length) {
+    if (!req.body?.latitude) {
         response.messages.push("Please add a latitude")
         response.success = false
     }
-    if (!req.body?.longitude?.length) {
+    if (!req.body?.longitude) {
         response.messages.push("Please add a longitude")
         response.success = false
     }

@@ -17,13 +17,17 @@ module.exports = (sequelize, DataTypes) => {
       Requests.belongsTo(models.Crops, {
         foreignKey: 'cropId',
       });
+      Requests.belongsTo(models.Users, {
+        foreignKey: 'userId',
+      });
     }
   }
   Requests.init({
-    farmKindId: DataTypes.NUMBER,
-    farmArea: DataTypes.NUMBER,
-    budget: DataTypes.NUMBER,
-    cropId: DataTypes.NUMBER
+    farmKindId: DataTypes.INTEGER,
+    userId:DataTypes.INTEGER,
+    farmArea: DataTypes.INTEGER,
+    budget: DataTypes.INTEGER,
+    cropId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Requests',

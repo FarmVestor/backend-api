@@ -11,24 +11,29 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Deal.belongsTo(models.Users, {
-        foreignKey: 'userId',
-        as: "firstUser"
+      Deal.belongsTo(models.Farms, {
+        foreignKey: 'farmId',
+        
       }
       );
      
       Deal.belongsTo(models.Users, {
-        foreignKey: 'partenerId',
-        as: "secondUser"
+        foreignKey: 'agentId',
+        as: "agent"
+      }
+      );
+      Deal.belongsTo(models.Users, {
+        foreignKey: 'investorId',
+        as: "investor"
       }
       );
     }
   }
   Deal.init({
-    farmId: DataTypes.NUMBER,
-    userId: DataTypes.NUMBER,
-    partenerId: DataTypes.NUMBER,
-    dealPrice: DataTypes.NUMBER,
+    farmId: DataTypes.INTEGER,
+    agentId: DataTypes.INTEGER,
+    investorId: DataTypes.INTEGER,
+    dealPrice: DataTypes.INTEGER,
     dealStatus: DataTypes.BOOLEAN
   }, {
     sequelize,

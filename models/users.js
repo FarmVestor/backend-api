@@ -14,14 +14,22 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'userId'
       });  
       
-      Users.hasMany(models.Deal, {
-        foreignKey: 'userId',
-        as: "firstUser"
-              })
+      // Users.hasMany(models.Deal, {
+      //   foreignKey: 'userId',
+      //   as: "firstUser"
+      //         })
         Users.hasMany(models.Deal, {
-       foreignKey: 'partenerId',
-        as: "secondUser"
+       foreignKey: 'agentId',
+        as: "agent"
       })
+      Users.hasMany(models.Deal, {
+        foreignKey: 'investorId',
+         as: "investor"
+       })
+      Users.hasMany(models.Requests, {
+        foreignKey: 'userId',
+         
+       })
       Users.belongsTo(models.Cities,{
         foreignKey: 'cityId'
       });
