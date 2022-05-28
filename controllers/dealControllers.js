@@ -7,7 +7,11 @@ exports.index = function (req, res) {
         messages: [],
         data: {}
     } 
+    const order = req.query.order
     models.Deal.findAll({
+        order: [
+            ["id", order]
+        ],
         include: [
            {
             model:models.Farms,
@@ -58,14 +62,15 @@ exports.store = async function (req, res, next) {
     //     response.messages.push("Please add a userId")
     //     response.success = false
     // }
-    if (!req.body?.agentId) {
-        response.messages.push("Please add an agent id")
+    if (!req.body?.agentId && !req.body?.investorId) {
+        response.messages.push("Please add either agent id or investor id")
         response.success = false
     }
-    if (!req.body?.investorId) {
-        response.messages.push("Please add an investor id")
+    if (req.body?.agentId && req.body?.investorId) {
+        response.messages.push("Agent Id and Investor Id can't be both exist at the same time ")
         response.success = false
     }
+    
     if (!req.body?.dealPrice) {
         response.messages.push("Please add a dealPrice")
         response.success = false
@@ -96,6 +101,7 @@ exports.store = async function (req, res, next) {
 
 exports.show = async function (req, res, next) {
     const id = req.params.id
+
     var response = {
         success: false,
         messages: [],
@@ -139,30 +145,23 @@ exports.update = async function (req, res, next) {
         success: true,
         data: {}
     }
-    const id = req.params.id
+    const id = parseInt(req.params.id)
+    console.log(typeof id)
     if (isNaN(id)) {
         response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
-        return
+        
+    }
+    if (!req.body?.agentId && !req.body?.investorId) {
+        response.messages.push("Please add either agent id or investor id")
+        response.success = false
+    }
+    if (req.body?.agentId && req.body?.investorId) {
+        response.messages.push("Agent Id and Investor Id can't be both exist at the same time ")
+        response.success = false
     }
 
-    if (!req.body?.agentId) {
-        response.messages.push("Please add an agent id")
-        response.success = false
-    }
-    if (!req.body?.investorId) {
-        response.messages.push("Please add an investor id")
-        response.success = false
-    }
-    if (!req.body?.dealPrice) {
-        response.messages.push("Please add a Price")
-        response.success = false
-    }
-    if (!req.body?.dealStatus) {
-        response.messages.push("Please add a Deal Status")
-        response.success = false
-    }
     if (!response.success) {
         res.send(response)
         return

@@ -4,7 +4,7 @@ var models = require('../models');
 var authService = require('../services/auth');
 const fs = require('fs')
 const sequelize = require('sequelize')
-var {farmTransformer,farmsTransformers}=require('../Transformaers/farmTransformers')
+var { farmTransformer, farmsTransformers } = require('../Transformaers/farmTransformers')
 
 exports.index = async function (req, res) {
     var response = {
@@ -20,11 +20,11 @@ exports.index = async function (req, res) {
         },
         {
             model: models.Crops,
-            as:"first"
+            as: "Crop"
         },
         {
             model: models.Crops,
-            as:"second"
+            as: "LastCrop"
         },
         {
             model: models.FarmKinds
@@ -37,9 +37,9 @@ exports.index = async function (req, res) {
     })
        
             if (Array.isArray(farm)) {
-                console.log(farm)
+                // console.log(farm)
                 response.data =farmsTransformers(farm)
-                console.log("farmmmm",farm)
+                // console.log("farmmmm",farm)
                 response.success = true
                 res.send(response)
             }
@@ -55,7 +55,7 @@ exports.store = async function (req, res) {
         data: {}
     }
 
-    
+
 
     // if (!req.body.userId || !req.body.farmName || !req.body.cityId || !req.body.farmArea || !req.body.cropId || !req.body.farmLicense ||
     //     !req.body.farmAvialable || !req.body.farmKindId || !req.body.farmVisibiltiy ||
@@ -64,7 +64,7 @@ exports.store = async function (req, res) {
     //     response.messages.push('please fill out all the fields')
     //     response.success = false
     // }
-    
+
     if (!req.file) {
         response.messages.push('Please add a photo')
         response.success = false
@@ -76,8 +76,8 @@ exports.store = async function (req, res) {
         await models.Farms.create({
             userId: req.body.userId,
             farmName: req.body.farmName,
-            farmPicture:req.file.filename,
-            cityId: req.file.cityId,
+            farmPicture: req.file.filename,
+            cityId: req.body.cityId,
             farmArea: req.body.farmArea,
             cropId: req.body.cropId,
             farmAvailable: req.body.farmAvailable,
@@ -116,11 +116,11 @@ exports.show = async function (req, res) {
         },
         {
             model: models.Crops,
-            as:"first"
+            as: "Crop"
         },
         {
             model: models.Crops,
-            as:"second"
+            as: "LastCrop"
         },
         {
             model: models.FarmKinds
@@ -132,7 +132,7 @@ exports.show = async function (req, res) {
     })
     if (farm) {
         response.success = true;
-        response.data =farmTransformer(farm) 
+        response.data = farmTransformer(farm)
     } else {
         response.messages.push("farm not found")
         res.status(404)
@@ -199,20 +199,21 @@ exports.update = async function (req, res) {
         }
         if (req.file) {
             fs.unlink('uploads/' + farm.farmPicture, () => { })
-            farm.picture = req.file.filename
+            farm.farmPicture = req.file.filename
+            //console.log(req.file)
         }
         farm.save().then((farm) => {
-            response.data =farmTransformer(farm) 
+            response.data = farmTransformer(farm)
             response.messages.push("farm has been updated")
             response.success = true
             res.send(response)
         })
-        
+
     } else {
         response.messages.push("not found")
         res.send(response)
     }
-    
+
 }
 
 exports.delete = async function (req, res) {
@@ -261,7 +262,7 @@ exports.FarmKindsindex = async function (req, res) {
     })
             if (Array.isArray(farmKinds)) {
                 response.data = farmKinds
-                console.log("farmmmm",farmKinds)
+                // console.log("farmmmm",farmKinds)
                 response.success = true
                 res.send(response)
             }
@@ -276,7 +277,7 @@ exports.FarmKindsstore = async function (req, res) {
     }
 
     const farmKind = req.body.farmKind
-  
+
 
     if (!farmKind) {
         response.messages.push('Please add a valid farm Kind')
@@ -287,7 +288,7 @@ exports.FarmKindsstore = async function (req, res) {
     if (response.success === true) {
         await models.FarmKinds.create({
             farmKind: req.body.farmKind,
-          
+
 
 
         }).then(farmKind => {
@@ -298,112 +299,120 @@ exports.FarmKindsstore = async function (req, res) {
     }
     res.send(response)
 }
-exports.FarmKindsshow = async function (req, res) 
-    {
-        var response = {
-            success: false,
-            messages: [],
-            data: {}
-        }
-        const id = req.params.id
-        if (isNaN(id)) {
-            response.messages.push("Please provide a valid ID")
-            response.success = false
-            res.send(response)
-            return
-        }
-        const Kind = await models.FarmKinds.findByPk(id, {
-            include: [
-                {model:models.Requests},
-                {model:models.Farms}
-            ]
-        })
-        if (Kind) {
-            response.success = true;
-            response.data = Kind
-        } else {
-            response.messages.push("kind not found")
-            res.status(404)
-        }
-        res.send(response)
+exports.FarmKindsshow = async function (req, res) {
+    var response = {
+        success: false,
+        messages: [],
+        data: {}
     }
-    exports.FarmKindsupdate = async function (req, res) {
-        var response = {
-            success: true,
-            messages: [],
-            data: {}
-        }
-        const id = req.params.id
-        if (isNaN(id)) {
-            response.messages.push("Please provide a valid ID")
-            response.success = false
-            res.send(response)
-            return
-        }
-        const kind = await models.FarmKinds.findByPk(id)
-        if (kind) {
-            if (req.body.farmKind) {
-                kind.farmKind = req.body.farmKind
-                 kind.save().then((kind) => {
+    const id = req.params.id
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    const Kind = await models.FarmKinds.findByPk(id, {
+        include: [
+            { model: models.Requests },
+            { model: models.Farms }
+        ]
+    })
+    if (Kind) {
+        response.success = true;
+        response.data = Kind
+    } else {
+        response.messages.push("kind not found")
+        res.status(404)
+    }
+    res.send(response)
+}
+exports.FarmKindsupdate = async function (req, res) {
+    var response = {
+        success: true,
+        messages: [],
+        data: {}
+    }
+    const id = req.params.id
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    const kind = await models.FarmKinds.findByPk(id)
+    if (kind) {
+        if (req.body.farmKind) {
+            kind.farmKind = req.body.farmKind
+            kind.save().then((kind) => {
                 response.data = kind
                 response.messages.push("kind has been updated")
                 response.success = true
                 res.send(response)
-            })}
-            else{
-                response.messages.push("You have to add a data to update")
-                res.send(response)
-            }
-            
-        } 
+            })
+        }
         else {
-            response.messages.push("not found")
+            response.messages.push("You have to add a data to update")
             res.send(response)
         }
-        
+
     }
-    exports.FarmKindsdelete = async function (req, res) {
-        var response = {
-            success: false,
-            messages: [],
-            data: {}
-        }
-        const id = req.params.id
-        if (isNaN(id)) {
-            response.messages.push("Please provide a valid ID")
-            response.success = false
-            res.send(response)
-            return
-        }
-        const deleted = await models.FarmKinds.destroy({
-            where: {
-                id: id
-            }
-        })
-        if (deleted == 1) {
-            response.messages.push("kind has been deleted")
-            response.success = true
-        } else {
-            response.messages.push("kind has not been deleted")
-        }
+    else {
+        response.messages.push("not found")
         res.send(response)
     }
-    
-    //the crops controllers
+
+}
+exports.FarmKindsdelete = async function (req, res) {
+    var response = {
+        success: false,
+        messages: [],
+        data: {}
+    }
+    const id = req.params.id
+    if (isNaN(id)) {
+        response.messages.push("Please provide a valid ID")
+        response.success = false
+        res.send(response)
+        return
+    }
+    const deleted = await models.FarmKinds.destroy({
+        where: {
+            id: id
+        }
+    })
+    if (deleted == 1) {
+        response.messages.push("kind has been deleted")
+        response.success = true
+    } else {
+        response.messages.push("kind has not been deleted")
+    }
+    res.send(response)
+}
+
+//the crops controllers
 exports.cropsIndex = function (req, res) {
     var response = {
         success: false,
         messages: [],
         data: {}
-    } 
+    }
     models.Crops.findAll({
         include: [
-           {
-            model:models.Requests,
-            
-           }
+
+            { model: models.Requests },
+            {
+                model: models.Farms,
+                as: "Crop"
+            },
+            {
+                model:models.Farms,
+                as:"LastCrop"
+            }
+
+
         ]
-       
+
     })
         .then(crops => {
             if (Array.isArray(crops)) {
@@ -415,25 +424,26 @@ exports.cropsIndex = function (req, res) {
         }).finally(() => {
             res.send(response)
         })
-   
+
 }
 exports.cropsStore = async function (req, res, next) {
     var response = {
         success: true,
         messages: []
     }
-   
-    console.log(req)
+
+  
     if (!req.body?.cropName) {
         response.messages.push("Please add a cropName")
         response.success = false
+
     }
-   
+
     if (response.success === true) {
         await models.Crops.create({
             cropId: req.body.cropId,
             cropName: req.body.cropName,
-         
+
         }).then(newCrop => {
             response.data = newCrop
             response.messages.push('Crop Added Successfuly')
@@ -454,12 +464,12 @@ exports.cropsShow = async function (req, res, next) {
         res.send(response)
         return
     }
-    const crop = await models.Crops.findByPk(id,{
-         include: [
-           {
-            model:models.Requests,
-            
-           }
+    const crop = await models.Crops.findByPk(id, {
+        include: [
+            {
+                model: models.Requests,
+
+            }
         ]
     })
     if (crop) {
@@ -487,19 +497,19 @@ exports.cropsUpdate = async function (req, res, next) {
     if (!req.body?.cropName) {
         response.messages.push("Please add a Crop")
         response.success = false
-        
+
     }
     if (!response.success) {
         res.send(response)
         return
     }
-  
+
     const updated = await models.Crops.findByPk(id)
     if (updated) {
         if (req.body.cropName) {
             updated.cropName = req.body.cropName
         }
-      
+
         updated.save().then((crop) => {
             response.messages.push('Successfully Updated')
             response.success = true
@@ -512,7 +522,7 @@ exports.cropsUpdate = async function (req, res, next) {
         response.success = false
         res.send(response)
     }
-    
+
 }
 exports.cropsDelete = async function (req, res, next) {
     let response = {

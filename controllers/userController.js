@@ -1,6 +1,7 @@
 var models = require('../models');
 var authService = require('../services/auth');
-
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 exports.index = function (req, res) {
     var response = {
         success: false,
@@ -9,20 +10,33 @@ exports.index = function (req, res) {
     }
     const order = req.query.order == 'ASC' ? 'ASC' : 'DESC'
     const id = req.query.id
-    console.log("idddd",id)
+    let wher = {}
+    if (id) {
+        wher = {
+            userTypeId: id
+        }
+    } else {
+        wher = {
+            userTypeId: {
+                [Op.gte]: 1
+            }
+        }
+    }
+    console.log("wher",wher)
     models.Users.findAll({
         order: [
             ['userName', order]
         ],
         include: [{
-            model:models.Cities,
-            model:models.UserType,
-            model:models.Requests
+            model: models.Cities,
+            model: models.UserType,
+            model: models.Requests,
+            model:models.Farms,
         }
-            
+
         ],
-       
-        where: {userTypeId:id}
+
+        where: wher
     })
         .then(users => {
             if (Array.isArray(users)) {
@@ -44,6 +58,10 @@ exports.signup = async function (req, res, next) {
     }
     if (!req.body?.userName) {
         response.messages.push("Please add a name")
+        response.success = false
+    }
+    if (!req.body?.cityId) {
+        response.messages.push("Please add a city")
         response.success = false
     }
     if (!req.body?.userPhone) {
@@ -76,8 +94,9 @@ exports.signup = async function (req, res, next) {
         },
         defaults: {
             userName: req.body.userName,
-            userPhone:req.body.userPhone,
-            userTypeId:req.body.userTypeId,
+            cityId:req.body.cityId,
+            userPhone: req.body.userPhone,
+            userTypeId: req.body.userTypeId,
             userPassword: authService.hashPassword(req.body.userPassword)
         }
     });
@@ -144,13 +163,13 @@ exports.show = async function (req, res, next) {
         res.send(response)
         return
     }
-    const user = await models.Users.findByPk(id,{
+    const user = await models.Users.findByPk(id, {
         include: [{
-            model:models.Cities,
-            model:models.UserType,
-            model:models.Requests
+            model: models.Cities,
+            model: models.UserType,
+            model: models.Requests
         }
-            
+
         ],
     })
     if (user) {
@@ -176,26 +195,17 @@ exports.update = async function (req, res, next) {
         res.send(response)
         return
     }
-    if (!req.body?.userName) {
-        response.messages.push("Please add a name")
-        response.success = false
-    }
-    if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(req.body?.userEmail))) {
-        response.messages.push("Please add a valid email")
-        response.success = false
-    }
-    if (req?.body?.userPassword != req?.body?.password_confirmation) {
-        response.messages.push("Your password and password confirmation do not match")
-        response.success = false
-    }
-    if (!response.success) {
-        res.send(response)
-        return
-    }
+    
     const updated = await models.Users.findByPk(id)
     if (updated) {
         if (req.body.userName) {
             updated.userName = req.body.userName
+        }
+        if (req.body.cityId) {
+            updated.cityId = req.body.cityId
+        }
+        if (req.body.userPhone) {
+            updated.userPhone = req.body.userPhone
         }
         if (req.body.userPassword) {
             updated.userPassword = authService.hashPassword(req.body.userPassword)
@@ -215,7 +225,7 @@ exports.update = async function (req, res, next) {
         response.success = false
         res.send(response)
     }
-    
+
 }
 
 exports.delete = async function (req, res, next) {
@@ -253,12 +263,12 @@ exports.indexUserType = function (req, res) {
         messages: [],
         data: {}
     }
-    
+
     models.UserType.findAll({
         include: [
             models.Users
         ],
-        
+
     })
         .then(userType => {
             if (Array.isArray(userType)) {
@@ -307,7 +317,7 @@ exports.storeUserType = async function (req, res, next) {
         response.messages.push("Please add a name")
         response.success = false
     }
-    
+
     if (!response.success) {
         res.send(response)
         return
@@ -348,7 +358,7 @@ exports.updateUSerType = async function (req, res, next) {
         response.messages.push("Please add a name")
         response.success = false
     }
-    
+
     if (!response.success) {
         res.send(response)
         return
@@ -358,7 +368,7 @@ exports.updateUSerType = async function (req, res, next) {
         if (req.body.userType) {
             updated.userType = req.body.userType
         }
-        
+
         updated.save().then((userType) => {
             response.messages.push('Successfully Updated')
             response.success = true
@@ -371,7 +381,7 @@ exports.updateUSerType = async function (req, res, next) {
         response.success = false
         res.send(response)
     }
-    
+
 }
 
 
