@@ -231,8 +231,8 @@ exports.governrateShow = async function (req, res)
     }
     const governrate = await models.Governrates.findByPk(id, {
         include: [
-            {model:models.Countries},
-            {model:models.Cities}
+            {model:models.Countries,
+            model:models.Cities}
         ]
     })
     if (governrate) {
@@ -257,14 +257,6 @@ exports.governrateUpdate = async function (req, res) {
         response.success = false
         res.send(response)
         return
-    }
-    if (!req.body?.governrateName) {
-        response.messages.push("Please add a farm governrate Name")
-        response.success = false
-    }
-    if (!req.body?.countryId) {
-        response.messages.push("Please add a country Id ")
-        response.success = false
     }
     
     if (!response.success) {
@@ -332,9 +324,8 @@ exports.cityIndex = function (req, res) {
         include: [
            {
             model:models.Users,
-           },
-           {
             model:models.Farms,
+            model:models.Governrates,
            }
         ]
        
@@ -410,9 +401,8 @@ exports.cityShow = async function (req, res, next) {
         include: [
             {
              model:models.Users,
-            },
-            {
              model:models.Farms,
+             model:models.Governrates
             }
          ]
     })
@@ -438,22 +428,7 @@ exports.cityUpdate = async function (req, res, next) {
         res.send(response)
         return
     }
-    if (!req.body?.cityName) {
-        response.messages.push("Please add a city Name")
-        response.success = false
-    }
-    if (!req.body?.governrateId) {
-        response.messages.push("Please add a governrateId")
-        response.success = false
-    }
-    if (!req.body?.latitude) {
-        response.messages.push("Please add a latitude")
-        response.success = false
-    }
-    if (!req.body?.longitude) {
-        response.messages.push("Please add a longitude")
-        response.success = false
-    }
+    
     if (!response.success) {
         res.send(response)
         return
