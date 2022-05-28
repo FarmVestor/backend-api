@@ -33,9 +33,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:"farmLastCropsId",
         as:"second"
       });
-
-
-
     }
   }
   Farms.init({

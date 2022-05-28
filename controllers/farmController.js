@@ -254,12 +254,9 @@ exports.FarmKindsindex = async function (req, res) {
 
     const farmKinds = await models.FarmKinds.findAll({
         include: [{
-            model: models.Requests
-        },
-        {
+            model: models.Requests,
             model: models.Farms
-        },
-        ],
+        }],
 
     })
             if (Array.isArray(farmKinds)) {
