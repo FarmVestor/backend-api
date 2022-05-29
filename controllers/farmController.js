@@ -235,10 +235,10 @@ exports.delete = async function (req, res) {
         }
     })
     if (deleted == 1) {
-        response.messages.push("Place has been deleted")
+        response.messages.push("Farms has been deleted")
         response.success = true
     } else {
-        response.messages.push("Place has not been deleted")
+        response.messages.push("Farms has not been deleted")
     }
     res.send(response)
 }
