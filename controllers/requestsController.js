@@ -46,25 +46,28 @@ exports.store = async function (req, res) {
     if (!farmKindId) {
         response.messages.push('Please add a valid farm Kind Id')
         response.success = false
+        
     }
 
     if (!farmArea) {
         response.messages.push('Please add a farm Area')
         response.success = false
         res.send(response)
+        
 
     }
     if (!budget) {
         response.messages.push('Please add a farm budget')
         response.success = false
         res.send(response)
+        
 
     }
     if (!cropId) {
         response.messages.push('Please add a farm cropId')
         response.success = false
         res.send(response)
-        return  
+          
     }
     if (!userId) {
         response.messages.push('Please add a farm userId')

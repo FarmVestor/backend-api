@@ -2,6 +2,7 @@ var models = require('../models');
 var authService = require('../services/auth');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+
 exports.index = function (req, res) {
     var response = {
         success: false,
