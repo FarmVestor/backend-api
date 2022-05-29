@@ -49,25 +49,25 @@ exports.store = async function (req, res) {
     }
 
     if (!farmArea) {
-        response.messages.push('Please add an farm Area')
+        response.messages.push('Please add a farm Area')
         response.success = false
         res.send(response)
 
     }
     if (!budget) {
-        response.messages.push('Please add an farm budget')
+        response.messages.push('Please add a farm budget')
         response.success = false
         res.send(response)
 
     }
     if (!cropId) {
-        response.messages.push('Please add an farm cropId')
+        response.messages.push('Please add a farm cropId')
         response.success = false
         res.send(response)
-        
+        return  
     }
     if (!userId) {
-        response.messages.push('Please add an farm userId')
+        response.messages.push('Please add a farm userId')
         response.success = false
         res.send(response)
         return
@@ -137,33 +137,33 @@ exports.update = async function (req, res) {
         res.send(response)
         return
     }
-    if (!req.body?.farmKindId) {
-        response.messages.push("Please add a farm Kind ID")
-        response.success = false
-    }
-    if (!req.body?.farmArea) {
-        response.messages.push("Please add a farm Area ")
-        response.success = false
-    }
-    if (!req.body?.budget) {
-        response.messages.push("Please add a budget")
-        response.success = false
-    }
-    if (!req.body?.cropId) {
-        response.messages.push("Please add a cropId")
-        response.success = false
-    }
-    if (!req.body?.userId) {
-        response.messages.push('Please add an farm userId')
-        response.success = false
-        res.send(response)
-        return
-    }
+    // if (!req.body?.farmKindId) {
+    //     response.messages.push("Please add a farm Kind ID")
+    //     response.success = false
+    // }
+    // if (!req.body?.farmArea) {
+    //     response.messages.push("Please add a farm Area ")
+    //     response.success = false
+    // }
+    // if (!req.body?.budget) {
+    //     response.messages.push("Please add a budget")
+    //     response.success = false
+    // }
+    // if (!req.body?.cropId) {
+    //     response.messages.push("Please add a cropId")
+    //     response.success = false
+    // }
+    // if (!req.body?.userId) {
+    //     response.messages.push('Please add an farm userId')
+    //     response.success = false
+    //     res.send(response)
+    //     return
+    // }
 
-    if (!response.success) {
-        res.send(response)
-        return
-    }
+    // if (!response.success) {
+    //     res.send(response)
+    //     return
+    // }
 
     const request = await models.Requests.findByPk(id)
     if (request) {
