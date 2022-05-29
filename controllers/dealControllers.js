@@ -145,21 +145,27 @@ exports.update = async function (req, res, next) {
         success: true,
         data: {}
     }
-    const id = parseInt(req.params.id)
+    const id = req.params.id
+    console.log("req.body.agentId",req.body.agentId,req.body.investorId)
     console.log(typeof id)
     if (isNaN(id)) {
         response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
+        return
         
     }
     if (!req.body?.agentId && !req.body?.investorId) {
         response.messages.push("Please add either agent id or investor id")
         response.success = false
+        res.send(response)
+        return
     }
     if (req.body?.agentId && req.body?.investorId) {
         response.messages.push("Agent Id and Investor Id can't be both exist at the same time ")
         response.success = false
+        res.send(response)
+        return
     }
 
     if (!response.success) {

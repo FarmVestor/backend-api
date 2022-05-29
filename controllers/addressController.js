@@ -8,14 +8,15 @@ exports.countryIndex = function (req, res) {
         success: false,
         messages: [],
         data: {}
-    } 
+    }
     models.Countries.findAll({
         include: [
-           {
-            model:models.Governrates,
-           }
+            {
+                model: models.Governrates,
+                include:models.Cities
+            }
         ]
-       
+
     })
         .then(countries => {
             if (Array.isArray(countries)) {
@@ -27,14 +28,14 @@ exports.countryIndex = function (req, res) {
         }).finally(() => {
             res.send(response)
         })
-   
+
 }
 exports.countryStore = async function (req, res, next) {
     var response = {
         success: true,
         messages: []
     }
-   
+
     console.log(req)
 
     if (!req.body?.countryName) {
@@ -70,12 +71,12 @@ exports.countryShow = async function (req, res, next) {
         res.send(response)
         return
     }
-    const country = await models.Countries.findByPk(id,{
+    const country = await models.Countries.findByPk(id, {
         include: [
             {
-             model:models.Governrates,
+                model: models.Governrates,
             }
-         ]
+        ]
     })
     if (country) {
         response.success = true;
@@ -112,7 +113,7 @@ exports.countryUpdate = async function (req, res, next) {
         if (req.body.countryName) {
             updated.countryName = req.body.countryName
         }
-       
+
         updated.save().then((country) => {
             response.messages.push('Successfully Updated')
             response.success = true
@@ -124,7 +125,7 @@ exports.countryUpdate = async function (req, res, next) {
         response.messages.push('There was a problem updating the country.  Please check the country information.')
         response.success = false
         res.send(response)
-    } 
+    }
 }
 exports.countryDelete = async function (req, res, next) {
     let response = {
@@ -162,11 +163,11 @@ exports.governrateIndex = function (req, res) {
     }
     models.Governrates.findAll({
         include: [
-            {model:models.Countries},
-            {model:models.Cities}
+            { model: models.Countries },
+            { model: models.Cities }
         ]
-       
-         })
+
+    })
         .then(governrate => {
             if (Array.isArray(governrate)) {
                 response.data = governrate
@@ -199,7 +200,7 @@ exports.governrateStore = async function (req, res) {
         response.success = false
         res.send(response)
         return
-        
+
     }
 
     if (response.success === true) {
@@ -215,8 +216,7 @@ exports.governrateStore = async function (req, res) {
     }
     res.send(response)
 }
-exports.governrateShow = async function (req, res) 
-{
+exports.governrateShow = async function (req, res) {
     var response = {
         success: false,
         messages: [],
@@ -231,8 +231,10 @@ exports.governrateShow = async function (req, res)
     }
     const governrate = await models.Governrates.findByPk(id, {
         include: [
-            {model:models.Countries,
-            model:models.Cities}
+            {
+                model: models.Countries,
+                model: models.Cities
+            }
         ]
     })
     if (governrate) {
@@ -245,7 +247,7 @@ exports.governrateShow = async function (req, res)
     res.send(response)
 }
 exports.governrateUpdate = async function (req, res) {
-        
+
     var response = {
         success: true,
         messages: [],
@@ -258,7 +260,7 @@ exports.governrateUpdate = async function (req, res) {
         res.send(response)
         return
     }
-    
+
     if (!response.success) {
         res.send(response)
         return
@@ -272,19 +274,19 @@ exports.governrateUpdate = async function (req, res) {
         if (req.body.countryId) {
             governrate.countryId = req.body.countryId
         }
-       
+
         governrate.save().then((governrate) => {
             response.data = governrate
             response.messages.push("governrate has been updated")
             response.success = true
             res.send(response)
         })
-        
+
     } else {
         response.messages.push("not found")
         res.send(response)
     }
-    
+
 }
 exports.governrateDelete = async function (req, res) {
     var response = {
@@ -319,16 +321,23 @@ exports.cityIndex = function (req, res) {
         success: false,
         messages: [],
         data: {}
-    } 
+    }
+    const order=req.query.order
     models.Cities.findAll({
+        order: [
+            ['cityName', order]
+        ],
         include: [
-           {
-            model:models.Users,
-            model:models.Farms,
-            model:models.Governrates,
-           }
+
+            { model: models.Users },
+            { model: models.Farms },
+            {
+                model: models.Governrates,
+                include: [models.Countries]
+            },
+
         ]
-       
+
     })
         .then(cities => {
             if (Array.isArray(cities)) {
@@ -340,14 +349,14 @@ exports.cityIndex = function (req, res) {
         }).finally(() => {
             res.send(response)
         })
-   
+
 }
 exports.cityStore = async function (req, res, next) {
     var response = {
         success: true,
         messages: []
     }
-   
+
     console.log(req)
 
     if (!req.body?.cityName) {
@@ -366,7 +375,7 @@ exports.cityStore = async function (req, res, next) {
         response.messages.push("Please add a longitude")
         response.success = false
     }
-    
+
 
     if (response.success === true) {
         await models.Cities.create({
@@ -397,14 +406,14 @@ exports.cityShow = async function (req, res, next) {
         res.send(response)
         return
     }
-    const city = await models.Cities.findByPk(id,{
+    const city = await models.Cities.findByPk(id, {
         include: [
             {
-             model:models.Users,
-             model:models.Farms,
-             model:models.Governrates
+                model: models.Users,
+                model: models.Farms,
+                model: models.Governrates
             }
-         ]
+        ]
     })
     if (city) {
         response.success = true;
@@ -428,7 +437,7 @@ exports.cityUpdate = async function (req, res, next) {
         res.send(response)
         return
     }
-    
+
     if (!response.success) {
         res.send(response)
         return
@@ -447,7 +456,7 @@ exports.cityUpdate = async function (req, res, next) {
         if (req.body.longitude) {
             updated.longitude = req.body.longitude
         }
-        
+
         updated.save().then((city) => {
             response.messages.push('Successfully Updated')
             response.success = true
@@ -460,7 +469,7 @@ exports.cityUpdate = async function (req, res, next) {
         response.success = false
         res.send(response)
     }
-    
+
 }
 exports.cityDelete = async function (req, res, next) {
     let response = {
