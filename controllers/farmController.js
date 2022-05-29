@@ -432,13 +432,12 @@ exports.cropsStore = async function (req, res, next) {
         messages: []
     }
 
-  
+    
+ console.log(req)
     if (!req.body?.cropName) {
         response.messages.push("Please add a cropName")
-        response.success = false
-
-    }
-
+        response.success = false }
+   
     if (response.success === true) {
         await models.Crops.create({
             cropId: req.body.cropId,
