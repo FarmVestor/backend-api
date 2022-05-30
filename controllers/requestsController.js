@@ -8,18 +8,17 @@ exports.index = function (req, res) {
         messages: [],
         data: {}
     }
-    const order = req.query.order
+    const order = req.query.order 
 
     models.Requests.findAll({
         order: [
             ["id", order]
         ],
         include: [
-            {
-                model: models.Crops,
-                model: models.FarmKinds,
-                model: models.Users
-            }
+            {model: models.Crops},
+            {model: models.FarmKinds},
+            {model: models.Users}
+            
         ]
 
     })
