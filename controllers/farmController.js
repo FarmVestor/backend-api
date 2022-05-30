@@ -3,8 +3,9 @@ var authService = require('../services/auth');
 var models = require('../models');
 var authService = require('../services/auth');
 const fs = require('fs')
-const sequelize = require('sequelize')
-var { farmTransformer, farmsTransformers } = require('../Transformaers/farmTransformers')
+
+var { farmTransformer, farmsTransformers } = require('../Transformaers/farmTransformers');
+const { Sequelize } = require('../models');
 
 exports.index = async function (req, res) {
     var response = {
@@ -12,9 +13,12 @@ exports.index = async function (req, res) {
         messages: [],
         data: {}
     }
-
-
+    const order = req.query.order || 'ASC' 
+   console.log(order +"-------")
     const farm = await models.Farms.findAll({
+        order: [
+            ['farmName', order]
+        ],
         include: [{
             model: models.Users
         },
