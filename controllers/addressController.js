@@ -322,7 +322,7 @@ exports.cityIndex = function (req, res) {
         messages: [],
         data: {}
     }
-    const order=req.query.order
+    const order=req.query.order || "ASC"
     models.Cities.findAll({
         order: [
             ['cityName', order]
