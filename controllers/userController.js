@@ -23,7 +23,7 @@ exports.index = function (req, res) {
             }
         }
     }
-    console.log("wher",wher)
+    // console.log("wher",wher)
     models.Users.findAll({
         order: [
             ['userName', order]
