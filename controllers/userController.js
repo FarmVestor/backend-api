@@ -28,12 +28,11 @@ exports.index = function (req, res) {
         order: [
             ['userName', order]
         ],
-        include: [{
-            model: models.Cities,
-            model: models.UserType,
-            model: models.Requests,
-            model:models.Farms,
-        }
+        include: [
+            {model: models.Cities},
+            {model: models.UserType},
+           { model: models.Requests},
+            {model:models.Farms}
 
         ],
 
