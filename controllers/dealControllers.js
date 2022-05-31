@@ -49,19 +49,11 @@ exports.store = async function (req, res, next) {
    
     console.log(req)
 
-   // const userId = req.body.userId
-    // if (userId.length < 3) {
-    //     response.messages.push('please add a valid userId')
-    //     response.success = false
-    // }
     if (!req.body?.farmId) {
         response.messages.push("Please add a userId")
         response.success = false
     }
-    // if (!req.body?.userId) {
-    //     response.messages.push("Please add a userId")
-    //     response.success = false
-    // }
+    
     if (!req.body?.agentId && !req.body?.investorId) {
         response.messages.push("Please add either agent id or investor id")
         response.success = false
