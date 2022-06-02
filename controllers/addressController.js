@@ -1,5 +1,6 @@
 var models = require('../models');
 var authService = require('../services/auth');
+var { addressTransformers, addressesTransformers } = require('../Transformaers/addressTransformers');
 
 //country controllers
 
@@ -322,7 +323,7 @@ exports.cityIndex = function (req, res) {
         messages: [],
         data: {}
     }
-    const order=req.query.order || "ASC"
+    const order=req.query.order
     models.Cities.findAll({
         order: [
             ['cityName', order]
@@ -341,7 +342,7 @@ exports.cityIndex = function (req, res) {
     })
         .then(cities => {
             if (Array.isArray(cities)) {
-                response.data = cities
+                response.data = addressesTransformers(cities)
                 response.success = true
             } else {
                 response.messages.push("hi")
@@ -417,7 +418,7 @@ exports.cityShow = async function (req, res, next) {
     })
     if (city) {
         response.success = true;
-        response.data = city
+        response.data = addressTransformers(city)
     } else {
         response.messages.push("city not found")
         res.status(404)

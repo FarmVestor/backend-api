@@ -35,6 +35,9 @@ exports.index = async function (req, res) {
         },
         {
             model: models.Deal
+        },
+        {
+            model: models.Cities
         }
         ],
 
@@ -131,6 +134,9 @@ exports.show = async function (req, res) {
         },
         {
             model: models.Deal
+        },
+        {
+            model: models.Cities
         }
         ],
     })
