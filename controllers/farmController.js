@@ -61,17 +61,64 @@ exports.store = async function (req, res) {
         messages: [],
         data: {}
     }
-
-
-
-    // if (!req.body.userId || !req.body.farmName || !req.body.cityId || !req.body.farmArea || !req.body.cropId || !req.body.farmLicense ||
-    //     !req.body.farmAvialable || !req.body.farmKindId || !req.body.farmVisibiltiy ||
-    //     !req.body.farmWaterSalinity || !req.body.farmLastCropsId || !req.body.farmFertilizer ||
-    //     !req.body.farmTreesAge || !req.body.farmDescription    ) {
-    //     response.messages.push('please fill out all the fields')
-    //     response.success = false
-    // }
-
+    if (!req.body?.userId) {
+        response.messages.push("Please add a userId")
+        response.success = false
+    }
+    
+    if (!req.body?.farmName) {
+        response.messages.push("Please add afarm name")
+        response.success = false
+    }
+    if (req.body?.city) {
+        response.messages.push("please add a city")
+        response.success = false
+    }
+    
+    if (!req.body?.farmArea) {
+        response.messages.push("Please add a farm area")
+        response.success = false
+    }
+    if (!req.body?.cropId) {
+        response.messages.push("Please add a crop")
+        response.success = false
+    }
+    if (!req.body?.farmAvailable) {
+        response.messages.push("Please select a farm avalibility")
+        response.success = false
+    }
+    if (!req.body?.farmKindId) {
+        response.messages.push("Please add a farm kind")
+        response.success = false
+    }
+    if (!req.body?.farmVisibiltiy) {
+        response.messages.push("Please select a farm visibility")
+        response.success = false
+    }
+    if (!req.body?.farmWaterSalinity) {
+        response.messages.push("Please add a farm Water Salinity")
+        response.success = false
+    }
+    if (!req.body?.farmLastCropsId) {
+        response.messages.push("Please add a farm Last Crop")
+        response.success = false
+    }
+    if (!req.body?.farmFertilizer) {
+        response.messages.push("Please add a farmFertilizer")
+        response.success = false
+    }
+    if (!req.body?.farmTreesAge) {
+        response.messages.push("Please add a farm Trees Age")
+        response.success = false
+    }
+    if (!req.body?.farmDescription) {
+        response.messages.push("Please add a farm Description")
+        response.success = false
+    }
+    if (!req.body?.farmLicense) {
+        response.messages.push("Please add a farm License")
+        response.success = false
+    }
     if (!req.file) {
         response.messages.push('Please add a photo')
         response.success = false
