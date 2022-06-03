@@ -29,10 +29,13 @@ exports.index = function (req, res) {
             ['userName', order]
         ],
         include: [
-            {model: models.Cities},
-            {model: models.UserType},
-           { model: models.Requests},
-            {model:models.Farms}
+            { model: models.Cities },
+            { model: models.UserType },
+            {
+                model: models.Requests,
+                include: [models.FarmKinds]
+            },
+            { model: models.Farms }
 
         ],
 
@@ -94,7 +97,7 @@ exports.signup = async function (req, res, next) {
         },
         defaults: {
             userName: req.body.userName,
-            cityId:req.body.cityId,
+            cityId: req.body.cityId,
             userPhone: req.body.userPhone,
             userTypeId: req.body.userTypeId,
             userPassword: authService.hashPassword(req.body.userPassword)
@@ -195,7 +198,7 @@ exports.update = async function (req, res, next) {
         res.send(response)
         return
     }
-    
+
     const updated = await models.Users.findByPk(id)
     if (updated) {
         if (req.body.userName) {

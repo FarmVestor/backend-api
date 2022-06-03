@@ -8,7 +8,7 @@ exports.index = function (req, res) {
         messages: [],
         data: {}
     }
-    const order = req.query.order 
+    const order = req.query.order  == 'ASC' ? 'ASC' : 'DESC'
 
     models.Requests.findAll({
         order: [
