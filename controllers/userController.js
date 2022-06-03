@@ -11,6 +11,7 @@ exports.index = function (req, res) {
     }
     const order = req.query.order == 'ASC' ? 'ASC' : 'DESC'
     const id = req.query.id
+    console.log(id, "iddddd")
     let wher = {}
     if (id) {
         wher = {
@@ -29,10 +30,10 @@ exports.index = function (req, res) {
             ['userName', order]
         ],
         include: [
-            {model: models.Cities},
-            {model: models.UserType},
-           { model: models.Requests},
-            {model:models.Farms}
+            { model: models.Cities },
+            { model: models.UserType },
+            { model: models.Requests },
+            { model: models.Farms }
 
         ],
 
@@ -94,7 +95,7 @@ exports.signup = async function (req, res, next) {
         },
         defaults: {
             userName: req.body.userName,
-            cityId:req.body.cityId,
+            cityId: req.body.cityId,
             userPhone: req.body.userPhone,
             userTypeId: req.body.userTypeId,
             userPassword: authService.hashPassword(req.body.userPassword)
@@ -164,11 +165,19 @@ exports.show = async function (req, res, next) {
         return
     }
     const user = await models.Users.findByPk(id, {
-        include: [{
-            model: models.Cities,
-            model: models.UserType,
-            model: models.Requests
-        }
+        include: [
+            { model: models.Cities },
+            { model: models.UserType },
+            {
+                model: models.Requests,
+                include: [
+                    { model: models.FarmKinds },
+                    { model: models.Crops }
+                ],
+
+            },
+
+
 
         ],
     })
@@ -195,7 +204,7 @@ exports.update = async function (req, res, next) {
         res.send(response)
         return
     }
-    
+
     const updated = await models.Users.findByPk(id)
     if (updated) {
         if (req.body.userName) {
