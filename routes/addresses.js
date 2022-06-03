@@ -12,14 +12,14 @@ router.put('/country/:id', isAuthenticated, addressController.countryUpdate);
 router.delete('/country/:id', isAuthenticated, addressController.countryDelete);
 
 //governrate routes
-router.get('/governrate', isAuthenticated,addressController.governrateIndex);
+router.get('/governrate',addressController.governrateIndex);
 router.post('/governrate', isAuthenticated,addressController.governrateStore);
 router.get('/governrate/:id', isAuthenticated, addressController.governrateShow);
 router.put('/governrate/:id', isAuthenticated, addressController.governrateUpdate);
 router.delete('/governrate/:id', isAuthenticated, addressController.governrateDelete);
 
 //city routes
-router.get('/city', isAuthenticated,addressController.cityIndex);
+router.get('/city',addressController.cityIndex);
 router.post('/city', isAuthenticated,addressController.cityStore);
 router.get('/city/:id', isAuthenticated, addressController.cityShow);
 router.put('/city/:id', isAuthenticated, addressController.cityUpdate);

@@ -13,9 +13,8 @@ router.delete('/:id', isAuthenticated, isDifferentAdmin, userController.delete);
 
 
 // userType routes
-router.get('/userType/all',isAuthenticated,userController.indexUserType);
+router.get('/userType/all',userController.indexUserType);
 router.get('/userType/:id',isAuthenticated,userController.showUserType);
-
 router.post('/userType', userController.storeUserType);
 router.put('/userType/:id', isAuthenticated, userController.updateUSerType);
 router.delete('/userType/:id', isAuthenticated, isDifferentAdmin, userController.deleteUserType);
