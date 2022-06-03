@@ -16,11 +16,9 @@ exports.index = function (req, res) {
         ],
         include: [
             {model: models.Crops},
-            {model: models.FarmKinds},
+            {model: models.FarmKinds},  
             {model: models.Users}
-            
         ]
-
     })
         .then(request => {
             if (Array.isArray(request)) {
@@ -50,28 +48,28 @@ exports.store = async function (req, res) {
     if (!farmKindId) {
         response.messages.push('Please add a valid farm Kind Id')
         response.success = false
-        
+
     }
 
     if (!farmArea) {
         response.messages.push('Please add a farm Area')
         response.success = false
         res.send(response)
-        
+
 
     }
     if (!budget) {
         response.messages.push('Please add a farm budget')
         response.success = false
         res.send(response)
-        
+
 
     }
     if (!cropId) {
         response.messages.push('Please add a farm cropId')
         response.success = false
         res.send(response)
-          
+
     }
     if (!userId) {
         response.messages.push('Please add a farm userId')

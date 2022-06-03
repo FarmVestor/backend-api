@@ -11,6 +11,7 @@ exports.index = function (req, res) {
     }
     const order = req.query.order == 'ASC' ? 'ASC' : 'DESC'
     const id = req.query.id
+    console.log(id, "iddddd")
     let wher = {}
     if (id) {
         wher = {
@@ -31,10 +32,7 @@ exports.index = function (req, res) {
         include: [
             { model: models.Cities },
             { model: models.UserType },
-            {
-                model: models.Requests,
-                include: [models.FarmKinds]
-            },
+            { model: models.Requests },
             { model: models.Farms }
 
         ],
@@ -167,11 +165,19 @@ exports.show = async function (req, res, next) {
         return
     }
     const user = await models.Users.findByPk(id, {
-        include: [{
-            model: models.Cities,
-            model: models.UserType,
-            model: models.Requests
-        }
+        include: [
+            { model: models.Cities },
+            { model: models.UserType },
+            {
+                model: models.Requests,
+                include: [
+                    { model: models.FarmKinds },
+                    { model: models.Crops }
+                ],
+
+            },
+
+
 
         ],
     })
