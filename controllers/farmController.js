@@ -2,10 +2,12 @@ var models = require('../models');
 var authService = require('../services/auth');
 var models = require('../models');
 var authService = require('../services/auth');
-const fs = require('fs')
+const fs = require('fs');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
 
 var { farmTransformer, farmsTransformers } = require('../Transformaers/farmTransformers');
-const { Sequelize } = require('../models');
 
 exports.index = async function (req, res) {
     var response = {
@@ -14,6 +16,20 @@ exports.index = async function (req, res) {
         data: {}
     }
     const order = req.query.order || 'ASC' 
+    const userId = req.query.userId
+   
+    let wher = {}
+    if (userId) {
+        wher = {
+            userId
+        }
+    } else {
+        wher = {
+            userId: {
+                [Op.gte]: 1
+            }
+        }
+    }
    console.log(order +"-------")
     const farm = await models.Farms.findAll({
         order: [
@@ -40,7 +56,7 @@ exports.index = async function (req, res) {
             model: models.Cities
         }
         ],
-
+        where: wher
     })
        
             if (Array.isArray(farm)) {

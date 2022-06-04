@@ -8,6 +8,20 @@ exports.index = function (req, res) {
         data: {}
     } 
     const order = req.query.order||"ASC"
+    const userId = req.query.id
+   
+    let wher = {}
+    if (userId) {
+        wher = {
+            id:userId
+        }
+    } else {
+        wher = {
+            id: {
+                [Op.gte]: 1
+            }
+        }
+    }
     models.Deal.findAll({
         order: [
             ["id", order]
@@ -15,7 +29,12 @@ exports.index = function (req, res) {
         include: [
            {
             model:models.Farms,
-            include:[models.Users]   
+            include:[
+                {model:models.Users,
+                    where:wher
+                },
+                
+            ]   
            },
            {
             model:models.Users,
@@ -25,7 +44,9 @@ exports.index = function (req, res) {
             model:models.Users,
             as:'investor'
            }
-        ]
+        ],
+        
+        
        
     })
         .then(deals => {
