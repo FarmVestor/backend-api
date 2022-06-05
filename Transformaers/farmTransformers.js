@@ -9,6 +9,12 @@ const farmTransformer= function(farm){
     if (farm.City?.longitude) {
         farm.City.longitude = parseFloat(farm.City.longitude)
     }
+    if (farm.farmLatitude) {
+        farm.farmLatitude = parseFloat(farm.farmLatitude)
+    }
+    if (farm.farmLongitude) {
+        farm.farmLongitude = parseFloat(farm.farmLongitude)
+    }
     return farm
 }
 
