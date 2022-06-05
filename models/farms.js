@@ -51,7 +51,10 @@ module.exports = (sequelize, DataTypes) => {
     farmTreesAge: DataTypes.INTEGER,
     farmDescription: DataTypes.STRING,
     farmName: DataTypes.STRING,
-    deleted: DataTypes.BOOLEAN
+    deleted: DataTypes.BOOLEAN,
+    farmLongitude:DataTypes.DECIMAL,
+    farmLatitude:DataTypes.DECIMAL,
+
   }, {
     sequelize,
     modelName: 'Farms',
