@@ -50,7 +50,8 @@ module.exports = (sequelize, DataTypes) => {
     farmFertilizer: DataTypes.STRING,
     farmTreesAge: DataTypes.INTEGER,
     farmDescription: DataTypes.STRING,
-    farmName: DataTypes.STRING
+    farmName: DataTypes.STRING,
+    deleted: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Farms',

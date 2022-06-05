@@ -27,7 +27,8 @@ module.exports = (sequelize, DataTypes) => {
     userId:DataTypes.INTEGER,
     farmArea: DataTypes.INTEGER,
     budget: DataTypes.INTEGER,
-    cropId: DataTypes.INTEGER
+    cropId: DataTypes.INTEGER,
+    deleted: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Requests',

@@ -26,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
     cityName: DataTypes.STRING,
     governrateId: DataTypes.INTEGER,
     latitude: DataTypes.DECIMAL,
-    longitude: DataTypes.DECIMAL
+    longitude: DataTypes.DECIMAL,
+    deleted: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Cities',

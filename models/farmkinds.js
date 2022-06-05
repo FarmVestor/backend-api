@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   FarmKinds.init({
-    farmKind: DataTypes.STRING
+    farmKind: DataTypes.STRING,
+    deleted: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'FarmKinds',

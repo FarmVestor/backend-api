@@ -13,7 +13,7 @@ exports.index = function (req, res) {
     let wher = {}
     if (userId) {
         wher = {
-            id:userId
+            id:userId,
         }
     } else {
         wher = {
@@ -45,8 +45,8 @@ exports.index = function (req, res) {
             as:'investor'
            }
         ],
-        
-        
+        where:{
+            deleted:req.query.deleted==1 ? 1 : 0}
        
     })
         .then(deals => {
@@ -208,7 +208,7 @@ exports.update = async function (req, res, next) {
         })
     } else {
         res.status(400);
-        response.messages.push('There was a problem updating the user.  Please check the user information.')
+        response.messages.push('There was a problem updating the deal')
         response.success = false
         res.send(response)
     }
@@ -218,26 +218,37 @@ exports.update = async function (req, res, next) {
 exports.delete = async function (req, res, next) {
     let response = {
         messages: [],
-        success: false,
+        success: true,
         data: {}
     }
     const id = req.params.id
+
     if (isNaN(id)) {
         response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
+        return  
+    }
+   
+
+    if (!response.success) {
+        res.send(response)
         return
     }
-    const deleted = await models.Deal.destroy({
-        where: {
-            id: id
-        }
-    })
-    if (deleted == 1) {
-        response.messages.push("User has been deleted")
-        response.success = true
+    const updated = await models.Deal.findByPk(id)
+    if (updated) {
+        updated.deleted= 1
+        updated.save().then((deal) => {
+            response.messages.push('Successfully deleted')
+            response.success = true
+            response.data = deal
+            res.send(response)
+        })
     } else {
-        response.messages.push("User has not been deleted")
+        res.status(400);
+        response.messages.push('There was a problem deleting the deal')
+        response.success = false
+        res.send(response)
     }
-    res.send(response)
+    
 }
