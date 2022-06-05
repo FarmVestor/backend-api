@@ -2,10 +2,12 @@ var models = require('../models');
 var authService = require('../services/auth');
 var models = require('../models');
 var authService = require('../services/auth');
-const fs = require('fs')
+const fs = require('fs');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
 
 var { farmTransformer, farmsTransformers } = require('../Transformaers/farmTransformers');
-const { Sequelize } = require('../models');
 
 exports.index = async function (req, res) {
     var response = {
@@ -14,6 +16,23 @@ exports.index = async function (req, res) {
         data: {}
     }
     const order = req.query.order || 'ASC' 
+    const userId = req.query.userId
+   
+    let wher = {}
+    if (userId) {
+        wher = {
+            userId
+        }
+    } else {
+        wher = {
+            userId: {
+                [Op.gte]: 1
+            }
+        }
+    }
+    const filter=req.query.filter ? JSON.parse(req.query.filter) : {cityId:0,farmKindId:0,cropId:0,lastCropId:0,farmAvailable:"string"}
+    console.log("filter  ", typeof filter?.farmAvailable)
+    
    console.log(order +"-------")
     const farm = await models.Farms.findAll({
         order: [
@@ -40,6 +59,16 @@ exports.index = async function (req, res) {
             model: models.Cities
         }
         ],
+        
+        where:{
+            cityId:filter.cityId==0 ? {[Op.gte]: 1} : filter.cityId,
+            cropId:filter.cropId==0 ? {[Op.gte]: 1} : filter.cropId,
+            farmLastCropsId:filter.lastCropId==0 ? {[Op.gte]: 1} : filter.lastCropId,
+            farmKindId:filter.farmKindId==0 ? {[Op.gte]: 1} : filter.farmKindId,
+            // farmAvailable:(typeof filter.farmAvailable == 'Boolean') ? filter.farmAvailable : {[Op.or]:[{farmAvailable: {[Op.eq]: "true"} }, { farmAvailable: {[Op.eq]: "false"}}]}
+           
+            
+        }
 
     })
        
@@ -119,6 +148,14 @@ exports.store = async function (req, res) {
         response.messages.push("Please add a farm License")
         response.success = false
     }
+    if (!req.body?.farmLongitude) {
+        response.messages.push("Please add Longitude.")
+        response.success = false
+    }
+    if (!req.body?.farmLatitude) {
+        response.messages.push("Please add Latitude.")
+        response.success = false
+    }
     if (!req.file) {
         response.messages.push('Please add a photo')
         response.success = false
@@ -136,13 +173,16 @@ exports.store = async function (req, res) {
             cropId: req.body.cropId,
             farmAvailable: req.body.farmAvailable,
             farmKindId: req.body.farmKindId,
-            farmVisibiltiy: req.body.farmVisibiltiy,
+            farmVisibiltiy: req.body.farmVisibility,
             farmWaterSalinity: req.body.farmWaterSalinity,
             farmLastCropsId: req.body.farmLastCropsId,
             farmFertilizer: req.body.farmFertilizer,
             farmTreesAge: req.body.farmTreesAge,
             farmDescription: req.body.farmDescription,
             farmLicense: req.body.farmLicense,
+            farmLongitude: req.body.farmLongitude,
+            farmLatitude: req.body.farmLatitude
+
         }).then(newfarm => {
             response.messages.push("Farms Added Successfully")
             response.data = newfarm
@@ -227,14 +267,14 @@ exports.update = async function (req, res) {
         if (req.body.cropId) {
             farm.cropId = req.body.cropId
         }
-        if (req.body.farmAvialable) {
-            farm.farmAvialable = req.body.farmAvialable
+        if (req.body.farmAvailable) {
+            farm.farmAvailable = req.body.farmAvailable
         }
         if (req.body.fatmKindId) {
-            farm.fatmKindId = req.body.fatmKindId
+            farm.fatmKindId = req.body.farmKindId
         }
         if (req.body.farmVisibiltiy) {
-            farm.farmVisibiltiy = req.body.farmVisibiltiy
+            farm.farmVisibiltiy = req.body.farmVisibility
         }
         if (req.body.farmWaterSalinity) {
             farm.farmWaterSalinity = req.body.farmWaterSalinity
@@ -253,6 +293,12 @@ exports.update = async function (req, res) {
         }
         if (req.body.farmLicense) {
             farm.farmLicense = req.body.farmLicense
+        }
+        if (req.body.farmLatitude) {
+            farm.farmLatitude = req.body.farmLatitude
+        }
+        if (req.body.farmLongitude) {
+            farm.farmLongitude = req.body.farmLongitude
         }
         if (req.file) {
             fs.unlink('uploads/' + farm.farmPicture, () => { })

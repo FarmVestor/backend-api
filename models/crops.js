@@ -27,7 +27,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Crops.init({
-    cropName: DataTypes.STRING
+    cropName: DataTypes.STRING,
+    deleted: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Crops',

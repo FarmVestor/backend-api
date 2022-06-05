@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   Governrates.init({
     governrateName: DataTypes.STRING,
-    countryId: DataTypes.INTEGER
+    countryId: DataTypes.INTEGER,
+    deleted: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Governrates',

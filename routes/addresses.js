@@ -12,7 +12,7 @@ router.put('/country/:id', isAuthenticated, addressController.countryUpdate);
 router.delete('/country/:id', isAuthenticated, addressController.countryDelete);
 
 //governrate routes
-router.get('/governrate',addressController.governrateIndex);
+router.get('/governrate', addressController.governrateIndex);
 router.post('/governrate', isAuthenticated,addressController.governrateStore);
 router.get('/governrate/:id', isAuthenticated, addressController.governrateShow);
 router.put('/governrate/:id', isAuthenticated, addressController.governrateUpdate);

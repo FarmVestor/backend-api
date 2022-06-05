@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Countries.init({
-    countryName: DataTypes.STRING
+    countryName: DataTypes.STRING,
+    deleted: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Countries',
