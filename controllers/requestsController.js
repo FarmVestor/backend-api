@@ -220,7 +220,7 @@ exports.delete = async function (req, res) {
         res.send(response)
         return
     }
-    const updated = await models.Deal.findByPk(id)
+    const updated = await models.Requests.findByPk(id)
     if (updated) {
         if (req.query.deleted) {
             updated.deleted = 1

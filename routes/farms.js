@@ -35,10 +35,10 @@ const storage = multer.diskStorage({
     })
 
 router.get('/',farmController.index);
-router.post('/',isAuthenticated,upload.single('farmPicture'), farmController.store);
+router.post('/',upload.single('farmPicture'), farmController.store);
 router.get('/:id', farmController.show);
-router.put('/:id', isAuthenticated, upload.single('farmPicture'),farmController.update);
-router.delete('/:id', isAuthenticated, farmController.delete);
+router.put('/:id', upload.single('farmPicture'),farmController.update);
+router.delete('/:id', farmController.delete);
 
 //the farm/farmKinds routes 
 router.get('/farmKinds/all',farmController.FarmKindsindex);

@@ -9,7 +9,7 @@ exports.index = function (req, res) {
     }
     const order = req.query.order || "ASC"
     const userId = req.query.id
-   console.log("req.query.deleted",req.query.deleted)
+//    console.log("req.query.deleted",req.query.deleted)
     let wher = {}
     if (userId) {
         wher = {
@@ -47,10 +47,10 @@ exports.index = function (req, res) {
             }
         ],
         where: {
-            deleted: req.query.deleted == 1 ? 1 : 0
+            deleted: req.query.deleted == 1 ? 1 : 0,
+            // id:req.query.userId==userId?id:{ [Op.gte]: 1 }
         }
-
-    })
+             })
         .then(deals => {
             if (Array.isArray(deals)) {
                 response.data = deals
@@ -239,9 +239,11 @@ exports.delete = async function (req, res, next) {
     }
     const updated = await models.Deal.findByPk(id)
     if (updated) {
-        if (req.query.deleted) {
+        if (req.query.deleted==1) {
+            console.log(" if req.query.deleted",req.query.deleted)
             updated.deleted = 1
         } else {
+            console.log("else req.query.deleted",req.query.deleted)
             updated.deleted = 0
         }
         updated.save().then((deal) => {

@@ -16,20 +16,8 @@ exports.index = async function (req, res) {
         data: {}
     }
     const order = req.query.order || 'ASC' 
-    const userId = req.query.userId
    
-    let wher = {}
-    if (userId) {
-        wher = {
-            userId
-        }
-    } else {
-        wher = {
-            userId: {
-                [Op.gte]: 1
-            }
-        }
-    }
+    
     const filter=req.query.filter ? JSON.parse(req.query.filter) : {cityId:0,farmKindId:0,cropId:0,lastCropId:0,farmAvailable:"string"}
     console.log("filter  ", typeof filter?.farmAvailable)
     
@@ -66,7 +54,9 @@ exports.index = async function (req, res) {
             farmLastCropsId:filter.lastCropId==0 ? {[Op.gte]: 1} : filter.lastCropId,
             farmKindId:filter.farmKindId==0 ? {[Op.gte]: 1} : filter.farmKindId,
             // farmAvailable:(typeof filter.farmAvailable == 'Boolean') ? filter.farmAvailable : {[Op.or]:[{farmAvailable: {[Op.eq]: "true"} }, { farmAvailable: {[Op.eq]: "false"}}]}
-           
+            deleted: req.query.deleted == 1 ? 1 : 0,
+            userId:req.query.userId ? req.query.userId : {[Op.gte]: 1}
+
             
         }
 
@@ -334,20 +324,24 @@ exports.delete = async function (req, res) {
         return
     }
 
-
     if (!response.success) {
         res.send(response)
         return
     }
-    const updated = await models.Deal.findByPk(id)
+    const updated = await models.Farms.findByPk(id)
     if (updated) {
-        if (req.query.deleted) {
+        if (req.query.deleted==1) {
             updated.deleted = 1
+            console.log(" -------------- if req.query.deleted",req.query.deleted)
+
         } else {
             updated.deleted = 0
+            console.log(" 000000000000 else req.query.deleted",req.query.deleted)
+
         }
         updated.save().then((deal) => {
             response.messages.push('Done Successfully')
+            
             response.success = true
             response.data = deal
             res.send(response)
@@ -500,7 +494,7 @@ exports.FarmKindsdelete = async function (req, res) {
         res.send(response)
         return
     }
-    const updated = await models.Deal.findByPk(id)
+    const updated = await models.FarmKinds.findByPk(id)
     if (updated) {
         if (req.query.deleted) {
             updated.deleted = 1

@@ -5,7 +5,7 @@ const { isAuthenticated } = require('../middlewares/isAuthenticated');
 const { isDifferentAdmin } = require('../middlewares/isDifferentAdmin');
 
 // country routes 
-router.get('/country', isAuthenticated,addressController.countryIndex);
+router.get('/country',addressController.countryIndex);
 router.post('/country', isAuthenticated,addressController.countryStore);
 router.get('/country/:id', isAuthenticated, addressController.countryShow);
 router.put('/country/:id', isAuthenticated, addressController.countryUpdate);
