@@ -7,8 +7,8 @@ exports.index = function (req, res) {
         success: false,
         messages: [],
         data: {}
-    } 
-    const order = req.query.order||"ASC"
+    }
+    const order = req.query.order || "ASC"
     const userId = req.query.id
     let investorId = ''
 
@@ -19,10 +19,11 @@ exports.index = function (req, res) {
     }
 
 
+   console.log("req.query.deleted",req.query.deleted)
     let wher = {}
     if (userId) {
         wher = {
-            id:userId,
+            id: userId,
         }
     } else {
         wher = {
@@ -41,26 +42,31 @@ exports.index = function (req, res) {
             deleted:req.query.deleted==1 ? 1 : 0,
         },
         include: [
-           {
-            model:models.Farms,
-            include:[
-                {model:models.Users,
-                    where:wher
-                },
-                
-            ]   
-           },
-           {
-            model:models.Users,
-            as:'agent'
-           },
-           {
-            model:models.Users,
-            as:'investor'
-           }
+            {
+                model: models.Farms,
+                include: [
+                    {
+                        model: models.Users,
+                        where: wher
+                    },
+
+                ]
+            },
+            {
+                model: models.Users,
+                as: 'agent'
+            },
+            {
+                model: models.Users,
+                as: 'investor'
+            }
         ],
         
        
+        where: {
+            deleted: req.query.deleted == 1 ? 1 : 0
+        }
+
     })
         .then(deals => {
           //  console.log("-----d----",typeof deals[0].investorId)
@@ -74,7 +80,7 @@ exports.index = function (req, res) {
         }).finally(() => {
             res.send(response)
         })
-   
+
 }
 
 exports.store = async function (req, res, next) {
@@ -82,14 +88,14 @@ exports.store = async function (req, res, next) {
         success: true,
         messages: []
     }
-   
+
     console.log(req)
 
     if (!req.body?.farmId) {
         response.messages.push("Please add a userId")
         response.success = false
     }
-    
+
     if (!req.body?.agentId && !req.body?.investorId) {
         response.messages.push("Please add either agent id or investor id")
         response.success = false
@@ -98,7 +104,7 @@ exports.store = async function (req, res, next) {
         response.messages.push("Agent Id and Investor Id can't be both exist at the same time ")
         response.success = false
     }
-    
+
     if (!req.body?.dealPrice) {
         response.messages.push("Please add a dealPrice")
         response.success = false
@@ -107,11 +113,11 @@ exports.store = async function (req, res, next) {
         response.messages.push("Please add a dealStatus")
         response.success = false
     }
-    
+
 
     if (response.success === true) {
         await models.Deal.create({
-            farmId:req.body.farmId,
+            farmId: req.body.farmId,
             agentId: req.body.agentId,
             investorId: req.body.investorId,
             dealPrice: req.body.dealPrice,
@@ -141,21 +147,21 @@ exports.show = async function (req, res, next) {
         res.send(response)
         return
     }
-    const deal = await models.Deal.findByPk(id,{
+    const deal = await models.Deal.findByPk(id, {
         include: [
             {
-             model:models.Farms,
-             include:[models.Users]   
+                model: models.Farms,
+                include: [models.Users]
             },
             {
-             model:models.Users,
-             as:'agent'
+                model: models.Users,
+                as: 'agent'
             },
             {
-             model:models.Users,
-             as:'investor'
+                model: models.Users,
+                as: 'investor'
             }
-         ]
+        ]
     })
     if (deal) {
         response.success = true;
@@ -174,14 +180,14 @@ exports.update = async function (req, res, next) {
         data: {}
     }
     const id = req.params.id
-    console.log("req.body.agentId",req.body.agentId,req.body.investorId)
+    console.log("req.body.agentId", req.body.agentId, req.body.investorId)
     console.log(typeof id)
     if (isNaN(id)) {
         response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
         return
-        
+
     }
     if (!req.body?.agentId && !req.body?.investorId) {
         response.messages.push("Please add either agent id or investor id")
@@ -214,7 +220,7 @@ exports.update = async function (req, res, next) {
         if (req.body.dealStatus) {
             updated.dealStatus = req.body.dealStatus
         }
-        
+
         updated.save().then((deal) => {
             response.messages.push('Successfully Updated')
             response.success = true
@@ -227,7 +233,7 @@ exports.update = async function (req, res, next) {
         response.success = false
         res.send(response)
     }
-    
+
 }
 
 exports.delete = async function (req, res, next) {
@@ -237,14 +243,14 @@ exports.delete = async function (req, res, next) {
         data: {}
     }
     const id = req.params.id
-
+    // const deleted = req.query.deleted ? 1 : 0
     if (isNaN(id)) {
         response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
-        return  
+        return
     }
-   
+
 
     if (!response.success) {
         res.send(response)
@@ -253,6 +259,7 @@ exports.delete = async function (req, res, next) {
     const updated = await models.Deal.findByPk(id)
     if (updated) {
         if (req.query.deleted==1) {
+        
             updated.deleted = 1
         } else {
             updated.deleted = 0
@@ -265,9 +272,9 @@ exports.delete = async function (req, res, next) {
         })
     } else {
         res.status(400);
-        response.messages.push('There was a problem deleting the deal')
+        response.messages.push('There was a problem with the user Id')
         response.success = false
         res.send(response)
     }
-    
+
 }

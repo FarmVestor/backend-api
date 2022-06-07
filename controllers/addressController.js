@@ -131,28 +131,42 @@ exports.countryUpdate = async function (req, res, next) {
 exports.countryDelete = async function (req, res, next) {
     let response = {
         messages: [],
-        success: false,
+        success: true,
         data: {}
     }
     const id = req.params.id
+    // const deleted = req.query.deleted ? 1 : 0
     if (isNaN(id)) {
         response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
         return
     }
-    const deleted = await models.Countries.destroy({
-        where: {
-            id: id
-        }
-    })
-    if (deleted == 1) {
-        response.messages.push("Country has been deleted")
-        response.success = true
-    } else {
-        response.messages.push("Country not found")
+
+
+    if (!response.success) {
+        res.send(response)
+        return
     }
-    res.send(response)
+    const updated = await models.Deal.findByPk(id)
+    if (updated) {
+        if (req.query.deleted) {
+            updated.deleted = 1
+        } else {
+            updated.deleted = 0
+        }
+        updated.save().then((deal) => {
+            response.messages.push('Done Successfully')
+            response.success = true
+            response.data = deal
+            res.send(response)
+        })
+    } else {
+        res.status(400);
+        response.messages.push('There was a problem')
+        response.success = false
+        res.send(response)
+    }
 }
 
 //Governrates controllers  
@@ -290,30 +304,44 @@ exports.governrateUpdate = async function (req, res) {
 
 }
 exports.governrateDelete = async function (req, res) {
-    var response = {
-        success: false,
+    let response = {
         messages: [],
+        success: true,
         data: {}
     }
     const id = req.params.id
+    // const deleted = req.query.deleted ? 1 : 0
     if (isNaN(id)) {
         response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
         return
     }
-    const deleted = await models.Governrates.destroy({
-        where: {
-            id: id
-        }
-    })
-    if (deleted == 1) {
-        response.messages.push("governrate has been deleted")
-        response.success = true
-    } else {
-        response.messages.push("governrate has not been deleted")
+
+
+    if (!response.success) {
+        res.send(response)
+        return
     }
-    res.send(response)
+    const updated = await models.Deal.findByPk(id)
+    if (updated) {
+        if (req.query.deleted) {
+            updated.deleted = 1
+        } else {
+            updated.deleted = 0
+        }
+        updated.save().then((deal) => {
+            response.messages.push('Done Successfully')
+            response.success = true
+            response.data = deal
+            res.send(response)
+        })
+    } else {
+        res.status(400);
+        response.messages.push('There was a problem ')
+        response.success = false
+        res.send(response)
+    }
 }
 
 //city controllers start
@@ -473,28 +501,42 @@ exports.cityUpdate = async function (req, res, next) {
 
 }
 exports.cityDelete = async function (req, res, next) {
-    let response = {
+     let response = {
         messages: [],
-        success: false,
+        success: true,
         data: {}
     }
     const id = req.params.id
+    // const deleted = req.query.deleted ? 1 : 0
     if (isNaN(id)) {
         response.messages.push("Please provide a valid ID")
         response.success = false
         res.send(response)
         return
     }
-    const deleted = await models.Cities.destroy({
-        where: {
-            id: id
-        }
-    })
-    if (deleted == 1) {
-        response.messages.push("City has been deleted")
-        response.success = true
-    } else {
-        response.messages.push("City not found")
+
+
+    if (!response.success) {
+        res.send(response)
+        return
     }
-    res.send(response)
+    const updated = await models.Deal.findByPk(id)
+    if (updated) {
+        if (req.query.deleted) {
+            updated.deleted = 1
+        } else {
+            updated.deleted = 0
+        }
+        updated.save().then((deal) => {
+            response.messages.push('Done Successfully')
+            response.success = true
+            response.data = deal
+            res.send(response)
+        })
+    } else {
+        res.status(400);
+        response.messages.push('There was a problem ')
+        response.success = false
+        res.send(response)
+    }
 }

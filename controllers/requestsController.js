@@ -217,7 +217,7 @@ exports.update = async function (req, res) {
     }
 
 }
-exports.delete = async function (req, res, next) {
+exports.delete = async function (req, res) {
     let response = {
         messages: [],
         success: true,
