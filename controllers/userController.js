@@ -10,21 +10,7 @@ exports.index = function (req, res) {
         data: {}
     }
     const order = req.query.order == 'ASC' ? 'ASC' : 'DESC'
-    const id = req.query.id
-    console.log(id, "iddddd")
-    let wher = {}
-    if (id) {
-        wher = {
-            userTypeId: id
-        }
-    } else {
-        wher = {
-            userTypeId: {
-                [Op.gte]: 1
-            }
-        }
-    }
-    // console.log("wher",wher)
+    
     models.Users.findAll({
         order: [
             ['userName', order]
@@ -37,7 +23,11 @@ exports.index = function (req, res) {
 
         ],
 
-        where: wher
+        where:{
+            userTypeId: req.query.type ? req.query.type : {[Op.gte]: 1},
+            deleted:req.query.deleted==1 ? 1 : 0,
+
+        }
     })
         .then(users => {
             if (Array.isArray(users)) {
@@ -132,6 +122,7 @@ exports.login = async function (req, res, next) {
             let passwordMatch = authService.comparePasswords(req.body.userPassword, user.userPassword);
             if (passwordMatch) {
                 let token = authService.signUser(user);
+                res.cookie("jwt", token); // <--- Adds token to response as a cookie
                 response.messages.push("Login successful")
                 response.success = true
                 response.token = token
@@ -181,6 +172,10 @@ exports.show = async function (req, res, next) {
 
 
         ],
+        where:{
+            deleted:req.query.deleted==1 ? 1 : 0,
+
+        }
     })
     if (user) {
         response.success = true;
@@ -188,6 +183,41 @@ exports.show = async function (req, res, next) {
     } else {
         response.messages.push("user not found")
         res.status(404)
+    }
+    res.send(response)
+}
+
+exports.profile = async function (req, res, next) {
+    const id = req.user.id
+    console.log(id, "sdfddsfdsf")
+    var response = {
+        success: false,
+        messages: [],
+        data: {}
+    }
+    const user = await models.Users.findByPk(id, {
+        include: [
+            { model: models.Cities },
+            { model: models.UserType },
+            {
+                model: models.Requests,
+                include: [
+                    { model: models.FarmKinds },
+                    { model: models.Crops }
+                ],
+
+            },
+
+
+
+        ],
+    })
+    if (user) {
+        response.success = true;
+        response.data = user
+    } else {
+        response.messages.push("user not found")
+        return res.status(404)
     }
     res.send(response)
 }
@@ -258,9 +288,9 @@ exports.delete = async function (req, res, next) {
         res.send(response)
         return
     }
-    const updated = await models.Deal.findByPk(id)
+    const updated = await models.Users.findByPk(id)
     if (updated) {
-        if (req.query.deleted) {
+        if (req.query.deleted==1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0
@@ -292,6 +322,10 @@ exports.indexUserType = function (req, res) {
         include: [
             models.Users
         ],
+        where:{
+            deleted:req.query.deleted==1 ? 1 : 0,
+
+        }
 
     })
         .then(userType => {
@@ -429,9 +463,9 @@ exports.deleteUserType = async function (req, res, next) {
         res.send(response)
         return
     }
-    const updated = await models.Deal.findByPk(id)
+    const updated = await models.UserType.findByPk(id)
     if (updated) {
-        if (req.query.deleted) {
+        if (req.query.deleted==1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0

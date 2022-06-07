@@ -1,6 +1,7 @@
 var models = require('../models');
 var authService = require('../services/auth');
-
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 exports.index = function (req, res) {
     var response = {
         success: false,
@@ -9,7 +10,16 @@ exports.index = function (req, res) {
     }
     const order = req.query.order || "ASC"
     const userId = req.query.id
-//    console.log("req.query.deleted",req.query.deleted)
+    let investorId = ''
+
+    if(req.user.userTypeId == 3 ){
+     investorId=req.user.id
+    }else{
+        investorId= {[Op.gte]: 1}
+    }
+
+
+   console.log("req.query.deleted",req.query.deleted)
     let wher = {}
     if (userId) {
         wher = {
@@ -22,10 +32,15 @@ exports.index = function (req, res) {
             }
         }
     }
+   // console.log("-----q----",typeof parseInt(req.query.id))
     models.Deal.findAll({
         order: [
             ["id", order]
         ],
+        where:{
+            investorId:investorId,
+            deleted:req.query.deleted==1 ? 1 : 0,
+        },
         include: [
             {
                 model: models.Farms,
@@ -46,12 +61,16 @@ exports.index = function (req, res) {
                 as: 'investor'
             }
         ],
+        
+       
         where: {
             deleted: req.query.deleted == 1 ? 1 : 0,
             // id:req.query.userId==userId?id:{ [Op.gte]: 1 }
         }
              })
         .then(deals => {
+          //  console.log("-----d----",typeof deals[0].investorId)
+
             if (Array.isArray(deals)) {
                 response.data = deals
                 response.success = true
@@ -94,6 +113,7 @@ exports.store = async function (req, res, next) {
         response.messages.push("Please add a dealStatus")
         response.success = false
     }
+
 
 
     if (response.success === true) {
@@ -240,14 +260,14 @@ exports.delete = async function (req, res, next) {
     const updated = await models.Deal.findByPk(id)
     if (updated) {
         if (req.query.deleted==1) {
-            console.log(" if req.query.deleted",req.query.deleted)
+        
             updated.deleted = 1
         } else {
             console.log("else req.query.deleted",req.query.deleted)
             updated.deleted = 0
         }
         updated.save().then((deal) => {
-            response.messages.push('Done Successfully')
+            response.messages.push('Done Successfully ')
             response.success = true
             response.data = deal
             res.send(response)

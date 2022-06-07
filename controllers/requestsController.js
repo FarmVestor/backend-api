@@ -1,15 +1,24 @@
 const { request } = require('../app');
 var models = require('../models');
 var authService = require('../services/auth');
-
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 exports.index = function (req, res) {
     var response = {
         success: false,
         messages: [],
         data: {}
     }
+    
     const order = req.query.order  == 'ASC' ? 'ASC' : 'DESC'
+    let investorId = ''
 
+    if(req.user.userTypeId == 3){
+     investorId=req.user.id
+    }else{
+        investorId= {[Op.gte]: 1}
+    }
+    console.log("---investorid---",investorId)
     models.Requests.findAll({
         order: [
             ["id", order]
@@ -18,7 +27,14 @@ exports.index = function (req, res) {
             {model: models.Crops},
             {model: models.FarmKinds},  
             {model: models.Users}
-        ]
+        ],
+        where: {
+            userId:investorId,
+            deleted: req.query.deleted == 1 ? 1 : 0,
+            //userId:req.query.id ? req.query.id : {[Op.gte]: 1}
+
+        }
+
     })
         .then(request => {
             if (Array.isArray(request)) {
@@ -68,14 +84,14 @@ exports.store = async function (req, res) {
     if (!cropId) {
         response.messages.push('Please add a farm cropId')
         response.success = false
-        res.send(response)
+        
 
     }
     if (!userId) {
         response.messages.push('Please add a farm userId')
         response.success = false
         res.send(response)
-        return
+        2
     }
 
 
@@ -196,6 +212,7 @@ exports.update = async function (req, res) {
 
     } else {
         response.messages.push("not found")
+        response.success = false
         res.send(response)
     }
 
@@ -222,21 +239,22 @@ exports.delete = async function (req, res) {
     }
     const updated = await models.Requests.findByPk(id)
     if (updated) {
-        if (req.query.deleted) {
+        if (req.query.deleted==1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0
         }
-        updated.save().then((deal) => {
+        updated.save().then((request) => {
             response.messages.push('Done Successfully')
             response.success = true
-            response.data = deal
+            response.data = request
             res.send(response)
         })
     } else {
         res.status(400);
-        response.messages.push('There was a problem with the request Id')
+        response.messages.push('There was a problem with the user Id')
         response.success = false
         res.send(response)
     }
+
 }

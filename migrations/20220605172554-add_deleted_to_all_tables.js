@@ -11,73 +11,53 @@ module.exports = {
      const addDeletedDeal=await queryInterface.addColumn(
       'Deals',
       'deleted',
-      {type:Sequelize.BOOLEAN,
-      allowNull: false,
-        defaultValue: false}
+      Sequelize.BOOLEAN
     );
     const addDeletedUser=await queryInterface.addColumn(
       'Users',
       'deleted',
-     {type:Sequelize.BOOLEAN,
-      allowNull: false,
-        defaultValue: false}
+      Sequelize.BOOLEAN
     );
     const addDeletedCities=await queryInterface.addColumn(
       'Cities',
       'deleted',
-     {type:Sequelize.BOOLEAN,
-      allowNull: false,
-        defaultValue: false}
+      Sequelize.BOOLEAN
     );
     const addDeletedCountries=await queryInterface.addColumn(
       'Countries',
       'deleted',
-     {type:Sequelize.BOOLEAN,
-      allowNull: false,
-        defaultValue: false}
+      Sequelize.BOOLEAN
     );
     const addDeletedCrops=await queryInterface.addColumn(
       'Crops',
       'deleted',
-     {type:Sequelize.BOOLEAN,
-      allowNull: false,
-        defaultValue: false}
+      Sequelize.BOOLEAN
     );
     const addDeletedFarmKinds=await queryInterface.addColumn(
       'FarmKinds',
       'deleted',
-     {type:Sequelize.BOOLEAN,
-      allowNull: false,
-        defaultValue: false}
+      Sequelize.BOOLEAN
     );
     const addDeletedFarms=await queryInterface.addColumn(
       'Farms',
       'deleted',
-     {type:Sequelize.BOOLEAN,
-      allowNull: false,
-        defaultValue: false}
+      Sequelize.BOOLEAN
     );
     const addDeletedGovernrates=await queryInterface.addColumn(
       'Governrates',
       'deleted',
-     {type:Sequelize.BOOLEAN,
-      allowNull: false,
-        defaultValue: false}
+      Sequelize.BOOLEAN
     );
     const addDeletedRequests=await queryInterface.addColumn(
       'Requests',
       'deleted',
-     {type:Sequelize.BOOLEAN,
-      allowNull: false,
-        defaultValue: false}
+      Sequelize.BOOLEAN
     );
-    const addDeletedUserType=await queryInterface.addColumn(
-      'UserTypes',
-      'deleted',
-     {type:Sequelize.BOOLEAN,
-      allowNull: false,
-        defaultValue: false}
-    );
+    // const addDeletedUserType=await queryInterface.addColumn(
+    //   'UserTypes',
+    //   'deleted',
+    //   Sequelize.BOOLEAN
+    // );
 
     return Promise.all([
       addDeletedDeal,
@@ -89,7 +69,7 @@ module.exports = {
       addDeletedFarms,
       addDeletedGovernrates,
       addDeletedRequests,
-      addDeletedUserType
+     // addDeletedUserType
     ]);
   },
 
@@ -103,53 +83,40 @@ module.exports = {
      const removeDeletedDeal=await queryInterface.removeColumn(
       'Deals',
       'deleted',
-     
     );
     const removeDeletedUser=await queryInterface.removeColumn(
       'Users',
       'deleted',
-     
     );
     const removeDeletedCities=await queryInterface.removeColumn(
       'Cities',
       'deleted',
-     
     );
     const removeDeletedCountries=await queryInterface.removeColumn(
       'Countries',
       'deleted',
-     
     );
     const removeDeletedCrops=await queryInterface.removeColumn(
       'Crops',
       'deleted',
-     
     );
     const removeDeletedFarmKinds=await queryInterface.removeColumn(
       'FarmKinds',
       'deleted',
-     
     );
     const removeDeletedFarms=await queryInterface.removeColumn(
       'Farms',
       'deleted',
-     
     );
     const removeDeletedGovernrates=await queryInterface.removeColumn(
       'Governrates',
       'deleted',
-     
     );
     const removeDeletedRequests=await queryInterface.removeColumn(
       'Requests',
       'deleted',
-     
     );
-    const removeDeletedUserType=await queryInterface.removeColumn(
-      'UserTypes',
-      'deleted',
-     
-    );
+    
 
     return Promise.all([
       removeDeletedDeal,
@@ -161,7 +128,6 @@ module.exports = {
       removeDeletedFarms,
       removeDeletedGovernrates,
       removeDeletedRequests,
-      removeDeletedUserType
     ]);
   }
 };
