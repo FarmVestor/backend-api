@@ -18,6 +18,8 @@ exports.index = function (req, res) {
         investorId= {[Op.gte]: 1}
     }
 
+    console.log("investorid----------",investorId)
+
 
    console.log("req.query.deleted",req.query.deleted)
     let wher = {}
@@ -37,10 +39,7 @@ exports.index = function (req, res) {
         order: [
             ["id", order]
         ],
-        where:{
-            investorId:investorId,
-            deleted:req.query.deleted==1 ? 1 : 0,
-        },
+       
         include: [
             {
                 model: models.Farms,
@@ -64,6 +63,7 @@ exports.index = function (req, res) {
         
        
         where: {
+            investorId:investorId,
             deleted: req.query.deleted == 1 ? 1 : 0
         }
 
