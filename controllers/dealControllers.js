@@ -9,7 +9,7 @@ exports.index = function (req, res) {
     }
     const order = req.query.order || "ASC"
     const userId = req.query.id
-
+   console.log("req.query.deleted",req.query.deleted)
     let wher = {}
     if (userId) {
         wher = {
