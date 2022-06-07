@@ -96,6 +96,7 @@ exports.store = async function (req, res, next) {
     }
 
 
+
     if (response.success === true) {
         await models.Deal.create({
             farmId: req.body.farmId,
@@ -239,7 +240,7 @@ exports.delete = async function (req, res, next) {
     }
     const updated = await models.Deal.findByPk(id)
     if (updated) {
-        if (req.query.deleted) {
+        if (req.query.deleted==1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0

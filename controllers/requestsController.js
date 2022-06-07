@@ -18,7 +18,10 @@ exports.index = function (req, res) {
             {model: models.Crops},
             {model: models.FarmKinds},  
             {model: models.Users}
-        ]
+        ],
+        where:{
+            deleted: req.query.deleted ? req.query.deleted : 0
+        }
     })
         .then(request => {
             if (Array.isArray(request)) {
@@ -75,7 +78,7 @@ exports.store = async function (req, res) {
         response.messages.push('Please add a farm userId')
         response.success = false
         res.send(response)
-        return
+        2
     }
 
 
@@ -220,9 +223,9 @@ exports.delete = async function (req, res) {
         res.send(response)
         return
     }
-    const updated = await models.Deal.findByPk(id)
+    const updated = await models.Requests.findByPk(id)
     if (updated) {
-        if (req.query.deleted) {
+        if (req.query.deleted == 1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0
