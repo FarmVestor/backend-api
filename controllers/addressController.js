@@ -16,7 +16,10 @@ exports.countryIndex = function (req, res) {
                 model: models.Governrates,
                 include:models.Cities
             }
-        ]
+        ],
+        where:{
+            deleted:req.query.deleted ? 1 : 0
+        }
 
     })
         .then(countries => {
@@ -148,9 +151,9 @@ exports.countryDelete = async function (req, res, next) {
         res.send(response)
         return
     }
-    const updated = await models.Deal.findByPk(id)
+    const updated = await models.Countries.findByPk(id)
     if (updated) {
-        if (req.query.deleted) {
+        if (req.query.deleted == 1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0
@@ -180,7 +183,10 @@ exports.governrateIndex = function (req, res) {
         include: [
             { model: models.Countries },
             { model: models.Cities }
-        ]
+        ],
+        where:{
+            deleted:req.query.deleted ? 1 : 0
+        }
 
     })
         .then(governrate => {
@@ -323,9 +329,9 @@ exports.governrateDelete = async function (req, res) {
         res.send(response)
         return
     }
-    const updated = await models.Deal.findByPk(id)
+    const updated = await models.Governrates.findByPk(id)
     if (updated) {
-        if (req.query.deleted) {
+        if (req.query.deleted == 1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0
@@ -365,7 +371,10 @@ exports.cityIndex = function (req, res) {
                 include: [models.Countries]
             },
 
-        ]
+        ],
+        where:{
+            deleted:req.query.deleted ? 1 : 0
+        }
 
     })
         .then(cities => {
@@ -520,9 +529,9 @@ exports.cityDelete = async function (req, res, next) {
         res.send(response)
         return
     }
-    const updated = await models.Deal.findByPk(id)
+    const updated = await models.Cities.findByPk(id)
     if (updated) {
-        if (req.query.deleted) {
+        if (req.query.deleted == 1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0

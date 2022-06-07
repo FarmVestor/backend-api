@@ -115,6 +115,7 @@ exports.store = async function (req, res, next) {
     }
 
 
+
     if (response.success === true) {
         await models.Deal.create({
             farmId: req.body.farmId,

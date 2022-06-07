@@ -15,29 +15,12 @@ exports.index = async function (req, res) {
         messages: [],
         data: {}
     }
-    const order = req.query.order || 'ASC' 
-    const userId = req.query.userId
    
-    let wher = {}
-    if (userId) {
-        wher = {
-            userId
-        }
-    } else {
-        wher = {
-            userId: {
-                [Op.gte]: 1
-            }
-        }
-    }
-    const filter=req.query.filter ? JSON.parse(req.query.filter) : {cityId:0,farmKindId:0,cropId:0,lastCropId:0,farmAvailable:"string"}
-    console.log("filter  ", typeof filter?.farmAvailable)
+    const filter=req.query.filter ? JSON.parse(req.query.filter) : {}
+    // console.log("filter  ", typeof filter?.farmAvailable)
     
-   console.log(order +"-------")
     const farm = await models.Farms.findAll({
-        order: [
-            ['farmName', order]
-        ],
+       
         include: [{
             model: models.Users
         },
@@ -61,13 +44,16 @@ exports.index = async function (req, res) {
         ],
         
         where:{
-            cityId:filter.cityId==0 ? {[Op.gte]: 1} : filter.cityId,
-            cropId:filter.cropId==0 ? {[Op.gte]: 1} : filter.cropId,
-            farmLastCropsId:filter.lastCropId==0 ? {[Op.gte]: 1} : filter.lastCropId,
-            farmKindId:filter.farmKindId==0 ? {[Op.gte]: 1} : filter.farmKindId,
-            // farmAvailable:(typeof filter.farmAvailable == 'Boolean') ? filter.farmAvailable : {[Op.or]:[{farmAvailable: {[Op.eq]: "true"} }, { farmAvailable: {[Op.eq]: "false"}}]}
-           
-            
+            cityId:filter.cityId? {[Op.gte]: 1} : filter.cityId,
+            cropId:filter.cropId ? {[Op.gte]: 1} : filter.cropId,
+            farmLastCropsId:filter.lastCropId ? {[Op.gte]: 1} : filter.lastCropId,
+            farmKindId:filter.farmKindId ? {[Op.gte]: 1} : filter.farmKindId,
+            // farmAvailable:filter.farmAvailable ? filter.farmAvailable : {
+            //     [Op.or]:[
+            //         {
+            //             farmAvailable: {[Op.eq]: 1} }, { farmAvailable: {[Op.eq]: 0}}]},
+            deleted:req.query.deleted==1 ? 1 : 0,
+            userId:req.query.userId ? req.query.userId : {[Op.gte]: 1},
         }
 
     })
@@ -339,9 +325,9 @@ exports.delete = async function (req, res) {
         res.send(response)
         return
     }
-    const updated = await models.Deal.findByPk(id)
+    const updated = await models.Farms.findByPk(id)
     if (updated) {
-        if (req.query.deleted) {
+        if (req.query.deleted==1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0
@@ -500,9 +486,9 @@ exports.FarmKindsdelete = async function (req, res) {
         res.send(response)
         return
     }
-    const updated = await models.Deal.findByPk(id)
+    const updated = await models.FarmKinds.findByPk(id)
     if (updated) {
-        if (req.query.deleted) {
+        if (req.query.deleted==1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0
@@ -674,9 +660,9 @@ exports.cropsDelete = async function (req, res, next) {
         res.send(response)
         return
     }
-    const updated = await models.Deal.findByPk(id)
+    const updated = await models.Crops.findByPk(id)
     if (updated) {
-        if (req.query.deleted) {
+        if (req.query.deleted==1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0

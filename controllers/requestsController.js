@@ -91,7 +91,7 @@ exports.store = async function (req, res) {
         response.messages.push('Please add a farm userId')
         response.success = false
         res.send(response)
-        return
+        2
     }
 
 
