@@ -1,6 +1,7 @@
 var models = require('../models');
 var authService = require('../services/auth');
-
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 exports.index = function (req, res) {
     var response = {
         success: false,
@@ -9,7 +10,15 @@ exports.index = function (req, res) {
     } 
     const order = req.query.order||"ASC"
     const userId = req.query.id
-   
+    let investorId = ''
+
+    if(req.user.userTypeId == 3 ){
+     investorId=req.user.id
+    }else{
+        investorId= {[Op.gte]: 1}
+    }
+
+
     let wher = {}
     if (userId) {
         wher = {
@@ -22,10 +31,15 @@ exports.index = function (req, res) {
             }
         }
     }
+   // console.log("-----q----",typeof parseInt(req.query.id))
     models.Deal.findAll({
         order: [
             ["id", order]
         ],
+        where:{
+            investorId:investorId,
+            deleted:req.query.deleted==1 ? 1 : 0,
+        },
         include: [
            {
             model:models.Farms,
@@ -45,11 +59,12 @@ exports.index = function (req, res) {
             as:'investor'
            }
         ],
-        where:{
-            deleted:req.query.deleted==1 ? 1 : 0}
+        
        
     })
         .then(deals => {
+          //  console.log("-----d----",typeof deals[0].investorId)
+
             if (Array.isArray(deals)) {
                 response.data = deals
                 response.success = true
@@ -237,9 +252,13 @@ exports.delete = async function (req, res, next) {
     }
     const updated = await models.Deal.findByPk(id)
     if (updated) {
-        updated.deleted= 1
+        if (req.query.deleted==1) {
+            updated.deleted = 1
+        } else {
+            updated.deleted = 0
+        }
         updated.save().then((deal) => {
-            response.messages.push('Successfully deleted')
+            response.messages.push('Done Successfully ')
             response.success = true
             response.data = deal
             res.send(response)

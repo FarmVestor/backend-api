@@ -132,6 +132,7 @@ exports.login = async function (req, res, next) {
             let passwordMatch = authService.comparePasswords(req.body.userPassword, user.userPassword);
             if (passwordMatch) {
                 let token = authService.signUser(user);
+                res.cookie("jwt", token); // <--- Adds token to response as a cookie
                 response.messages.push("Login successful")
                 response.success = true
                 response.token = token
@@ -188,6 +189,41 @@ exports.show = async function (req, res, next) {
     } else {
         response.messages.push("user not found")
         res.status(404)
+    }
+    res.send(response)
+}
+
+exports.profile = async function (req, res, next) {
+    const id = req.user.id
+    console.log(id, "sdfddsfdsf")
+    var response = {
+        success: false,
+        messages: [],
+        data: {}
+    }
+    const user = await models.Users.findByPk(id, {
+        include: [
+            { model: models.Cities },
+            { model: models.UserType },
+            {
+                model: models.Requests,
+                include: [
+                    { model: models.FarmKinds },
+                    { model: models.Crops }
+                ],
+
+            },
+
+
+
+        ],
+    })
+    if (user) {
+        response.success = true;
+        response.data = user
+    } else {
+        response.messages.push("user not found")
+        return res.status(404)
     }
     res.send(response)
 }
