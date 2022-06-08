@@ -10,6 +10,8 @@ var farmsRouter = require('./routes/farms');
 var addressesRouter = require('./routes/addresses');
 var requestsRouter = require('./routes/requests');
 var dealsRouter = require('./routes/deals');
+var reportsRouter = require('./routes/reports');
+
 require('dotenv').config()
 
 var app = express();
@@ -32,6 +34,8 @@ app.use('/farms', farmsRouter);
 app.use('/addresses', addressesRouter);
 app.use('/requests', requestsRouter);
 app.use('/deals', dealsRouter);
+app.use('/reports', reportsRouter);
+
 
 
 // catch 404 and forward to error handler
