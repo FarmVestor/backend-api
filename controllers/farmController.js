@@ -44,15 +44,15 @@ exports.index = async function (req, res) {
         ],
         
         where:{
-            cityId:filter.cityId? {[Op.gte]: 1} : filter.cityId,
-            cropId:filter.cropId ? {[Op.gte]: 1} : filter.cropId,
-            farmLastCropsId:filter.lastCropId ? {[Op.gte]: 1} : filter.lastCropId,
-            farmKindId:filter.farmKindId ? {[Op.gte]: 1} : filter.farmKindId,
+            cityId:filter.cityId ? filter.cityId: {[Op.gte]: 1} ,
+            cropId:filter.cropId ? filter.cropId :{[Op.gte]: 1} ,
+            farmLastCropsId:filter.lastCropId ?filter.lastCropId : {[Op.gte]: 1},
+            farmKindId:filter.farmKindId ? filter.farmKindId :{[Op.gte]: 1} ,
             // farmAvailable:filter.farmAvailable ? filter.farmAvailable : {
             //     [Op.or]:[
             //         {
             //             farmAvailable: {[Op.eq]: 1} }, { farmAvailable: {[Op.eq]: 0}}]},
-            deleted:req.query.deleted==1 ? 1 : 0,
+            deleted:req.query.deleted ==1 ? 1 : 0,
             userId:req.query.userId ? req.query.userId : {[Op.gte]: 1},
         }
 
@@ -159,7 +159,7 @@ exports.store = async function (req, res) {
             cropId: req.body.cropId,
             farmAvailable: req.body.farmAvailable,
             farmKindId: req.body.farmKindId,
-            farmVisibiltiy: req.body.farmVisibility,
+            farmVisibiltiy: req.body.farmVisibiltiy,
             farmWaterSalinity: req.body.farmWaterSalinity,
             farmLastCropsId: req.body.farmLastCropsId,
             farmFertilizer: req.body.farmFertilizer,
@@ -260,7 +260,7 @@ exports.update = async function (req, res) {
             farm.fatmKindId = req.body.farmKindId
         }
         if (req.body.farmVisibiltiy) {
-            farm.farmVisibiltiy = req.body.farmVisibility
+            farm.farmVisibiltiy = req.body.farmVisibiltiy
         }
         if (req.body.farmWaterSalinity) {
             farm.farmWaterSalinity = req.body.farmWaterSalinity
