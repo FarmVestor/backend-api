@@ -34,7 +34,7 @@ const storage = multer.diskStorage({
     limits:{fileSize:104857600}
     })
 
-router.get('/',farmController.index);
+router.get('/',isAuthenticated,farmController.index);
 router.post('/',upload.single('farmPicture'), farmController.store);
 router.get('/:id', farmController.show);
 router.put('/:id', upload.single('farmPicture'),farmController.update);

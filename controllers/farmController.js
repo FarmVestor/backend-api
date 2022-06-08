@@ -17,8 +17,19 @@ exports.index = async function (req, res) {
     }
    
     const filter=req.query.filter ? JSON.parse(req.query.filter) : {}
-    // console.log("filter  ", typeof filter?.farmAvailable)
-    
+        console.log("filter  ", typeof filter?.farmAvailable)
+
+        let userId = ''
+
+        console.log("userTypeIdiiiiii",userId  )
+
+        if (req.user.userTypeId == 2 ){
+            userId=req.user.id  
+                }
+        else{
+            userId= {[Op.gte]: 1}
+        }
+
     const farm = await models.Farms.findAll({
        
         include: [{
@@ -44,16 +55,17 @@ exports.index = async function (req, res) {
         ],
         
         where:{
-            cityId:filter.cityId? {[Op.gte]: 1} : filter.cityId,
-            cropId:filter.cropId ? {[Op.gte]: 1} : filter.cropId,
-            farmLastCropsId:filter.lastCropId ? {[Op.gte]: 1} : filter.lastCropId,
-            farmKindId:filter.farmKindId ? {[Op.gte]: 1} : filter.farmKindId,
+            userId:userId,
+
+            // cityId:filter.cityId? {[Op.gte]: 1} : filter.cityId,
+            // cropId:filter.cropId ? {[Op.gte]: 1} : filter.cropId,
+            // farmLastCropsId:filter.lastCropId ? {[Op.gte]: 1} : filter.lastCropId,
+            // farmKindId:filter.farmKindId ? {[Op.gte]: 1} : filter.farmKindId,
             // farmAvailable:filter.farmAvailable ? filter.farmAvailable : {
             //     [Op.or]:[
             //         {
-            //             farmAvailable: {[Op.eq]: 1} }, { farmAvailable: {[Op.eq]: 0}}]},
+            //farmAvailable: {[Op.eq]: 1} }, { farmAvailable: {[Op.eq]: 0}}]},
             deleted:req.query.deleted==1 ? 1 : 0,
-            userId:req.query.userId ? req.query.userId : {[Op.gte]: 1},
         }
 
     })

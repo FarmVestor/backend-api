@@ -128,6 +128,8 @@ exports.login = async function (req, res, next) {
                 response.token = token
                 response.userId=user.id
                 response.userTypeId=user.userTypeId
+                
+                console.log("userTypeId=========",user.userTypeId)
 
                 res.send(response);
             } else {
