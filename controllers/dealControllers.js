@@ -9,31 +9,29 @@ exports.index = function (req, res) {
         data: {}
     }
     const order = req.query.order || "ASC"
-    const userId = req.query.id
+    let farmerId = ''
     let investorId = ''
 
     if(req.user.userTypeId == 3 ){
-     investorId=req.user.id
-    }else{
-        investorId= {[Op.gte]: 1}
-    }
+         investorId=req.user.id
+         farmerId={[Op.gte]: 1}
 
+    }
+    else if (req.user.userTypeId == 2 ){
+        investorId={[Op.gte]: 1}
+        farmerId=req.user.id
+           }
+    else{
+        investorId= {[Op.gte]: 1}
+        farmerId= {[Op.gte]: 1}
+
+    }
+    
     console.log("investorid----------",investorId)
 
 
    console.log("req.query.deleted",req.query.deleted)
-    let wher = {}
-    if (userId) {
-        wher = {
-            id: userId,
-        }
-    } else {
-        wher = {
-            id: {
-                [Op.gte]: 1
-            }
-        }
-    }
+   
    // console.log("-----q----",typeof parseInt(req.query.id))
     models.Deal.findAll({
         order: [
@@ -46,7 +44,7 @@ exports.index = function (req, res) {
                 include: [
                     {
                         model: models.Users,
-                        where: wher
+                        where: {id:farmerId}
                     },
 
                 ]
@@ -66,8 +64,7 @@ exports.index = function (req, res) {
             investorId:investorId,
             deleted: req.query.deleted == 1 ? 1 : 0
         }
-
-    })
+             })
         .then(deals => {
           //  console.log("-----d----",typeof deals[0].investorId)
 
@@ -263,6 +260,7 @@ exports.delete = async function (req, res, next) {
         
             updated.deleted = 1
         } else {
+            console.log("else req.query.deleted",req.query.deleted)
             updated.deleted = 0
         }
         updated.save().then((deal) => {
