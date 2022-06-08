@@ -22,11 +22,12 @@ const storage = multer.diskStorage({
           'image/jpg',
           'image/png',
           'image/webp',
+          'image/jfif',
       ]
       if(acceptedMimType.includes(file.mimetype)){
         cb(null,true)
     }else{
-        cb(null,false)
+        cb(null,false) 
     }
   }
   const upload = multer({ storage: storage,
@@ -34,11 +35,11 @@ const storage = multer.diskStorage({
     limits:{fileSize:104857600}
     })
 
-router.get('/',farmController.index);
-router.post('/',isAuthenticated,upload.single('farmPicture'), farmController.store);
+router.get('/',isAuthenticated,farmController.index);
+router.post('/',upload.single('farmPicture'), farmController.store);
 router.get('/:id', farmController.show);
-router.put('/:id', isAuthenticated, upload.single('farmPicture'),farmController.update);
-router.delete('/:id', isAuthenticated, farmController.delete);
+router.put('/:id', upload.single('farmPicture'),farmController.update);
+router.delete('/:id', farmController.delete);
 
 //the farm/farmKinds routes 
 router.get('/farmKinds/all',farmController.FarmKindsindex);

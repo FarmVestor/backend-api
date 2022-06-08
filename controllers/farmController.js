@@ -17,8 +17,19 @@ exports.index = async function (req, res) {
     }
    
     const filter=req.query.filter ? JSON.parse(req.query.filter) : {}
-    // console.log("filter  ", typeof filter?.farmAvailable)
-    
+        console.log("filter  ", typeof filter?.farmAvailable)
+
+        let userId = ''
+
+        console.log("userTypeIdiiiiii",userId  )
+
+        if (req.user.userTypeId == 2 ){
+            userId=req.user.id  
+                }
+        else{
+            userId= {[Op.gte]: 1}
+        }
+
     const farm = await models.Farms.findAll({
        
         include: [{
@@ -44,16 +55,17 @@ exports.index = async function (req, res) {
         ],
         
         where:{
-            cityId:filter.cityId? {[Op.gte]: 1} : filter.cityId,
-            cropId:filter.cropId ? {[Op.gte]: 1} : filter.cropId,
-            farmLastCropsId:filter.lastCropId ? {[Op.gte]: 1} : filter.lastCropId,
-            farmKindId:filter.farmKindId ? {[Op.gte]: 1} : filter.farmKindId,
+            userId:userId,
+
+            // cityId:filter.cityId? {[Op.gte]: 1} : filter.cityId,
+            // cropId:filter.cropId ? {[Op.gte]: 1} : filter.cropId,
+            // farmLastCropsId:filter.lastCropId ? {[Op.gte]: 1} : filter.lastCropId,
+            // farmKindId:filter.farmKindId ? {[Op.gte]: 1} : filter.farmKindId,
             // farmAvailable:filter.farmAvailable ? filter.farmAvailable : {
             //     [Op.or]:[
             //         {
-            //             farmAvailable: {[Op.eq]: 1} }, { farmAvailable: {[Op.eq]: 0}}]},
+            //farmAvailable: {[Op.eq]: 1} }, { farmAvailable: {[Op.eq]: 0}}]},
             deleted:req.query.deleted==1 ? 1 : 0,
-            userId:req.query.userId ? req.query.userId : {[Op.gte]: 1},
         }
 
     })
@@ -159,7 +171,7 @@ exports.store = async function (req, res) {
             cropId: req.body.cropId,
             farmAvailable: req.body.farmAvailable,
             farmKindId: req.body.farmKindId,
-            farmVisibiltiy: req.body.farmVisibility,
+            farmVisibiltiy: req.body.farmVisibiltiy,
             farmWaterSalinity: req.body.farmWaterSalinity,
             farmLastCropsId: req.body.farmLastCropsId,
             farmFertilizer: req.body.farmFertilizer,
@@ -260,7 +272,7 @@ exports.update = async function (req, res) {
             farm.fatmKindId = req.body.farmKindId
         }
         if (req.body.farmVisibiltiy) {
-            farm.farmVisibiltiy = req.body.farmVisibility
+            farm.farmVisibiltiy = req.body.farmVisibiltiy
         }
         if (req.body.farmWaterSalinity) {
             farm.farmWaterSalinity = req.body.farmWaterSalinity
@@ -320,7 +332,6 @@ exports.delete = async function (req, res) {
         return
     }
 
-
     if (!response.success) {
         res.send(response)
         return
@@ -329,11 +340,16 @@ exports.delete = async function (req, res) {
     if (updated) {
         if (req.query.deleted==1) {
             updated.deleted = 1
+            console.log(" -------------- if req.query.deleted",req.query.deleted)
+
         } else {
             updated.deleted = 0
+            console.log(" 000000000000 else req.query.deleted",req.query.deleted)
+
         }
         updated.save().then((deal) => {
             response.messages.push('Done Successfully')
+            
             response.success = true
             response.data = deal
             res.send(response)

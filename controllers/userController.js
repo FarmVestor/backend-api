@@ -10,7 +10,7 @@ exports.index = function (req, res) {
         data: {}
     }
     const order = req.query.order == 'ASC' ? 'ASC' : 'DESC'
-    
+    console.log("req.query.type",req.query.type)
     models.Users.findAll({
         order: [
             ['userName', order]
@@ -128,6 +128,8 @@ exports.login = async function (req, res, next) {
                 response.token = token
                 response.userId=user.id
                 response.userTypeId=user.userTypeId
+                
+                console.log("userTypeId=========",user.userTypeId)
 
                 res.send(response);
             } else {
