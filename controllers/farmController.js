@@ -171,7 +171,7 @@ exports.store = async function (req, res) {
             cropId: req.body.cropId,
             farmAvailable: req.body.farmAvailable,
             farmKindId: req.body.farmKindId,
-            farmVisibiltiy: req.body.farmVisibility,
+            farmVisibiltiy: req.body.farmVisibiltiy,
             farmWaterSalinity: req.body.farmWaterSalinity,
             farmLastCropsId: req.body.farmLastCropsId,
             farmFertilizer: req.body.farmFertilizer,
@@ -272,7 +272,7 @@ exports.update = async function (req, res) {
             farm.fatmKindId = req.body.farmKindId
         }
         if (req.body.farmVisibiltiy) {
-            farm.farmVisibiltiy = req.body.farmVisibility
+            farm.farmVisibiltiy = req.body.farmVisibiltiy
         }
         if (req.body.farmWaterSalinity) {
             farm.farmWaterSalinity = req.body.farmWaterSalinity

@@ -22,11 +22,12 @@ const storage = multer.diskStorage({
           'image/jpg',
           'image/png',
           'image/webp',
+          'image/jfif',
       ]
       if(acceptedMimType.includes(file.mimetype)){
         cb(null,true)
     }else{
-        cb(null,false)
+        cb(null,false) 
     }
   }
   const upload = multer({ storage: storage,

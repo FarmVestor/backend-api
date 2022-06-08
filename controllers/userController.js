@@ -10,7 +10,7 @@ exports.index = function (req, res) {
         data: {}
     }
     const order = req.query.order == 'ASC' ? 'ASC' : 'DESC'
-    
+    console.log("req.query.type",req.query.type)
     models.Users.findAll({
         order: [
             ['userName', order]
