@@ -127,6 +127,7 @@ exports.login = async function (req, res, next) {
                 response.success = true
                 response.token = token
                 response.userId=user.id
+                response.userTypeId=user.userTypeId
                 res.send(response);
             } else {
                 response.messages.push("Wrong password")
