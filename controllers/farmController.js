@@ -250,58 +250,58 @@ exports.update = async function (req, res) {
     }
     const farm = await models.Farms.findByPk(id)
     if (farm) {
-        if (req.body.farmName) {
-            farm.farmName = req.body.farmName
+        if (req?.body.farmName) {
+            farm.farmName = req?.body.farmName
         }
-        if (req.body.userId) {
-            farm.userId = req.body.userId
+        if (req?.body.userId) {
+            farm.userId = req?.body.userId
         }
-        if (req.body.cityId) {
-            farm.cityId = req.body.cityId
+        if (req?.body.cityId) {
+            farm.cityId = req?.body.cityId
         }
-        if (req.body.farmArea) {
-            farm.farmArea = req.body.farmArea
+        if (req?.body.farmArea) {
+            farm.farmArea = req?.body.farmArea
         }
-        if (req.body.cropId) {
-            farm.cropId = req.body.cropId
+        if (req?.body.cropId) {
+            farm.cropId = req?.body.cropId
         }
-        if (req.body.farmAvailable) {
-            farm.farmAvailable = req.body.farmAvailable
+        if (req?.body.farmAvailable) {
+            farm.farmAvailable = req?.body.farmAvailable
         }
-        if (req.body.fatmKindId) {
-            farm.fatmKindId = req.body.farmKindId
+        if (req?.body.fatmKindId) {
+            farm.fatmKindId = req?.body.farmKindId
         }
-        if (req.body.farmVisibiltiy) {
-            farm.farmVisibiltiy = req.body.farmVisibiltiy
+        if (req?.body.farmVisibiltiy) {
+            farm.farmVisibiltiy = req?.body.farmVisibiltiy
         }
-        if (req.body.farmWaterSalinity) {
-            farm.farmWaterSalinity = req.body.farmWaterSalinity
+        if (req?.body.farmWaterSalinity) {
+            farm.farmWaterSalinity = req?.body.farmWaterSalinity
         }
-        if (req.body.farmLastCropsId) {
-            farm.farmLastCropsId = req.body.farmLastCropsId
+        if (req?.body.farmLastCropsId) {
+            farm.farmLastCropsId = req?.body.farmLastCropsId
         }
-        if (req.body.farmDescription) {
-            farm.farmDescription = req.body.farmDescription
+        if (req?.body.farmDescription) {
+            farm.farmDescription = req?.body.farmDescription
         }
-        if (req.body.farmTreesAge) {
-            farm.farmTreesAge = req.body.farmTreesAge
+        if (req?.body.farmTreesAge) {
+            farm.farmTreesAge = req?.body.farmTreesAge
         }
-        if (req.body.farmDescription) {
-            farm.farmDescription = req.body.farmDescription
+        if (req?.body.farmDescription) {
+            farm.farmDescription = req?.body.farmDescription
         }
-        if (req.body.farmLicense) {
-            farm.farmLicense = req.body.farmLicense
+        if (req?.body.farmLicense) {
+            farm.farmLicense = req?.body.farmLicense
         }
-        if (req.body.farmLatitude) {
-            farm.farmLatitude = req.body.farmLatitude
+        if (req?.body.farmLatitude) {
+            farm.farmLatitude = req?.body.farmLatitude
         }
-        if (req.body.farmLongitude) {
-            farm.farmLongitude = req.body.farmLongitude
+        if (req?.body.farmLongitude) {
+            farm.farmLongitude = req?.body.farmLongitude
         }
-        if (req.file) {
+        if (req?.file) {
             fs.unlink('uploads/' + farm.farmPicture, () => { })
-            farm.farmPicture = req.file.filename
-            //console.log(req.file)
+            farm.farmPicture = req?.file.filename
+            //console.log(req?.file)
         }
         farm.save().then((farm) => {
             response.data = farmTransformer(farm)

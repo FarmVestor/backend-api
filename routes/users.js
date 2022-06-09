@@ -7,11 +7,7 @@ const { isDifferentAdmin } = require('../middlewares/isDifferentAdmin');
 router.get('/',isAuthenticated,userController.index);
 router.post('/', userController.signup);
 router.post('/login', userController.login);
-<<<<<<< HEAD
 router.get('/admin/:id', isAuthenticated,userController.show);
-=======
-router.get('/admin/:id', userController.show);
->>>>>>> 02bdfb3597ce6e017bacd3cce8803bcc53944515
 router.put('/admin/:id', isAuthenticated, userController.update);
 router.get('/profile', isAuthenticated, userController.profile);
 router.delete('/:id', isAuthenticated, isDifferentAdmin, userController.delete);
