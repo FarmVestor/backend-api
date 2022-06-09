@@ -10,6 +10,7 @@ router.post('/', userController.signup);
 router.post('/login', userController.login);
 router.get('/show/:id',userController.show);
 router.put('/admin/:id', isAuthenticated, userController.update);
+
 router.get('/profile', isAuthenticated, userController.profile);
 router.delete('/:id', isAuthenticated, isDifferentAdmin, userController.delete);
 
