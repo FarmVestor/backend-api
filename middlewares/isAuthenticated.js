@@ -3,9 +3,8 @@ const authService = require('../services/auth');
 exports.isAuthenticated = async function(req, res, next) {
 
     const token = req?.cookies?.jwt ||
-    req?.headers?.authorization?.split(" ")[1] ||
-    req?.headers?.Authorization?.split(" ")[1] ||
-    null;
+    req?.headers?.authorization?.split(" ")[1] || null
+    req?.headers?.Authorization?.split(" ")[1] ||null;
     let isVerfied = await authService.verifyUser(token);
     console.log('isVerfied', isVerfied)
     console.log('token', token)
