@@ -19,7 +19,7 @@ router.put('/governrate/:id', isAuthenticated, addressController.governrateUpdat
 router.delete('/governrate/:id', isAuthenticated, addressController.governrateDelete);
 
 //city routes
-router.get('/city',addressController.cityIndex);
+router.get('/city', addressController.cityIndex);
 router.post('/city', isAuthenticated,addressController.cityStore);
 router.get('/city/:id', isAuthenticated, addressController.cityShow);
 router.put('/city/:id', isAuthenticated, addressController.cityUpdate);
