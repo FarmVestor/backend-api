@@ -335,30 +335,17 @@ exports.update = async function (req, res) {
         if (req?.body.farmAvailable) {
             farm.farmAvailable = req?.body.farmAvailable
         }
-<<<<<<< HEAD
-        if (req.body.farmKindId) {
-            farm.farmKindId = req.body.farmKindId
-=======
         if (req?.body.farmKindId) {
             farm.farmKindId = req?.body.farmKindId
->>>>>>> 5e902403409c56dde499e330abbd2276056eda44
         }
         if (req?.body.farmVisibiltiy) {
             farm.farmVisibiltiy = req?.body.farmVisibiltiy
         }
-<<<<<<< HEAD
-        if (req.body.farmWaterSalinity) {
-            farm.farmWaterSalinity = req.body.farmWaterSalinity
-        }  
-        if (req.body.farmLastCropsId) {
-            farm.farmLastCropsId = req.body.farmLastCropsId
-=======
         if (req?.body.farmWaterSalinity) {
             farm.farmWaterSalinity = req?.body.farmWaterSalinity
         }
         if (req?.body.farmLastCropsId) {
             farm.farmLastCropsId = req?.body.farmLastCropsId
->>>>>>> 5e902403409c56dde499e330abbd2276056eda44
         }
         if (req?.body.farmDescription) {
             farm.farmDescription = req?.body.farmDescription
@@ -366,19 +353,11 @@ exports.update = async function (req, res) {
         if (req?.body.farmTreesAge) {
             farm.farmTreesAge = req?.body.farmTreesAge
         }
-<<<<<<< HEAD
-        if (req.body.farmDescription) {
-            farm.farmDescription = req.body.farmDescription
-        } 
-        if (req.body.farmLicense) {
-            farm.farmLicense = req.body.farmLicense
-=======
         if (req?.body.farmDescription) {
             farm.farmDescription = req?.body.farmDescription
         }
         if (req?.body.farmLicense) {
             farm.farmLicense = req?.body.farmLicense
->>>>>>> 5e902403409c56dde499e330abbd2276056eda44
         }
         if (req?.body.farmLatitude) {
             farm.farmLatitude = req?.body.farmLatitude
