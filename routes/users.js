@@ -4,7 +4,7 @@ var userController = require('../controllers/userController')
 const { isAuthenticated } = require('../middlewares/isAuthenticated');
 const { isDifferentAdmin } = require('../middlewares/isDifferentAdmin');
 
-router.get('/all',userController.index);
+router.get('/all',userController.userIndex);
 router.get('/',isAuthenticated,userController.index);
 router.post('/', userController.signup);
 router.post('/login', userController.login);
