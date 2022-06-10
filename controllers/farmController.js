@@ -18,11 +18,13 @@ exports.index = async function (req, res) {
    
     const filter=req.query.filter ? JSON.parse(req.query.filter) : {}
         console.log("filter  ", typeof filter?.farmAvailable)
+        let visible=''
         let userId = ''
 
         try{
             if (req.user.userTypeId == 2 ){
-                userId=req.user.id  
+                userId=req.user.id 
+               
  
                     }
             else{
@@ -66,6 +68,7 @@ exports.index = async function (req, res) {
                     //         {
                     //farmAvailable: {[Op.eq]: 1} }, { farmAvailable: {[Op.eq]: 0}}]},
                     deleted:req.query.deleted==1 ? 1 : 0,
+
                     
                 }
         
