@@ -19,16 +19,16 @@ exports.index = async function (req, res) {
     const filter=req.query.filter ? JSON.parse(req.query.filter) : {}
         console.log("filter  ", typeof filter?.farmAvailable)
         let userId = ''
-        console.log("userTypeIdiiiiii",userId  )
 
         try{
             if (req.user.userTypeId == 2 ){
                 userId=req.user.id  
+ 
                     }
             else{
                 userId= {[Op.gte]: 1}
+
             }
-        }catch{
             const farm = await models.Farms.findAll({
        
                 include: [{
@@ -55,6 +55,7 @@ exports.index = async function (req, res) {
                 
                 where:{
                     userId:userId?userId:{[Op.gte]: 1},
+
         
                     // cityId:filter.cityId? {[Op.gte]: 1} : filter.cityId,
                     // cropId:filter.cropId ? {[Op.gte]: 1} : filter.cropId,
@@ -65,9 +66,68 @@ exports.index = async function (req, res) {
                     //         {
                     //farmAvailable: {[Op.eq]: 1} }, { farmAvailable: {[Op.eq]: 0}}]},
                     deleted:req.query.deleted==1 ? 1 : 0,
+                    
                 }
         
             })
+            console.log("userTypeIdiiiiii",userId  )
+
+               
+                    if (Array.isArray(farm)) {
+                        // console.log(farm)
+                        response.data =farmsTransformers(farm)
+                        // console.log("farmmmm",farm)
+                        response.success = true
+                        res.send(response)
+                    }
+                // }).finally(() => {
+                //     res.send(response)
+               
+        }
+        catch{
+            const farm = await models.Farms.findAll({
+       
+                include: [{
+                    model: models.Users
+                },
+                {
+                    model: models.Crops,
+                    as: "Crop"
+                },
+                {
+                    model: models.Crops,
+                    as: "LastCrop"
+                },
+                {
+                    model: models.FarmKinds
+                },
+                {
+                    model: models.Deal
+                },
+                {
+                    model: models.Cities
+                }
+                ],
+                
+                where:{
+                    userId:userId?userId:{[Op.gte]: 1},
+
+        
+                    // cityId:filter.cityId? {[Op.gte]: 1} : filter.cityId,
+                    // cropId:filter.cropId ? {[Op.gte]: 1} : filter.cropId,
+                    // farmLastCropsId:filter.lastCropId ? {[Op.gte]: 1} : filter.lastCropId,
+                    // farmKindId:filter.farmKindId ? {[Op.gte]: 1} : filter.farmKindId,
+                    // farmAvailable:filter.farmAvailable ? filter.farmAvailable : {
+                    //     [Op.or]:[
+                    //         {
+                    //farmAvailable: {[Op.eq]: 1} }, { farmAvailable: {[Op.eq]: 0}}]},
+                    deleted:req.query.deleted==1 ? 1 : 0,
+                    
+                }
+        
+            })
+            console.log("userTypeIdiiiiii",userId  )
+
                
                     if (Array.isArray(farm)) {
                         // console.log(farm)
@@ -253,58 +313,58 @@ exports.update = async function (req, res) {
     }
     const farm = await models.Farms.findByPk(id)
     if (farm) {
-        if (req.body.farmName) {
-            farm.farmName = req.body.farmName
+        if (req?.body.farmName) {
+            farm.farmName = req?.body.farmName
         }
-        if (req.body.userId) {
-            farm.userId = req.body.userId
+        if (req?.body.userId) {
+            farm.userId = req?.body.userId
         }
-        if (req.body.cityId) {
-            farm.cityId = req.body.cityId
+        if (req?.body.cityId) {
+            farm.cityId = req?.body.cityId
         }
-        if (req.body.farmArea) {
-            farm.farmArea = req.body.farmArea
+        if (req?.body.farmArea) {
+            farm.farmArea = req?.body.farmArea
         }
-        if (req.body.cropId) {
-            farm.cropId = req.body.cropId
+        if (req?.body.cropId) {
+            farm.cropId = req?.body.cropId
         }
-        if (req.body.farmAvailable) {
-            farm.farmAvailable = req.body.farmAvailable
+        if (req?.body.farmAvailable) {
+            farm.farmAvailable = req?.body.farmAvailable
         }
-        if (req.body.fatmKindId) {
-            farm.fatmKindId = req.body.farmKindId
+        if (req?.body.farmKindId) {
+            farm.farmKindId = req?.body.farmKindId
         }
-        if (req.body.farmVisibiltiy) {
-            farm.farmVisibiltiy = req.body.farmVisibiltiy
+        if (req?.body.farmVisibiltiy) {
+            farm.farmVisibiltiy = req?.body.farmVisibiltiy
         }
-        if (req.body.farmWaterSalinity) {
-            farm.farmWaterSalinity = req.body.farmWaterSalinity
+        if (req?.body.farmWaterSalinity) {
+            farm.farmWaterSalinity = req?.body.farmWaterSalinity
         }
-        if (req.body.farmLastCropsId) {
-            farm.farmLastCropsId = req.body.farmLastCropsId
+        if (req?.body.farmLastCropsId) {
+            farm.farmLastCropsId = req?.body.farmLastCropsId
         }
-        if (req.body.farmDescription) {
-            farm.farmDescription = req.body.farmDescription
+        if (req?.body.farmDescription) {
+            farm.farmDescription = req?.body.farmDescription
         }
-        if (req.body.farmTreesAge) {
-            farm.farmTreesAge = req.body.farmTreesAge
+        if (req?.body.farmTreesAge) {
+            farm.farmTreesAge = req?.body.farmTreesAge
         }
-        if (req.body.farmDescription) {
-            farm.farmDescription = req.body.farmDescription
+        if (req?.body.farmDescription) {
+            farm.farmDescription = req?.body.farmDescription
         }
-        if (req.body.farmLicense) {
-            farm.farmLicense = req.body.farmLicense
+        if (req?.body.farmLicense) {
+            farm.farmLicense = req?.body.farmLicense
         }
-        if (req.body.farmLatitude) {
-            farm.farmLatitude = req.body.farmLatitude
+        if (req?.body.farmLatitude) {
+            farm.farmLatitude = req?.body.farmLatitude
         }
-        if (req.body.farmLongitude) {
-            farm.farmLongitude = req.body.farmLongitude
+        if (req?.body.farmLongitude) {
+            farm.farmLongitude = req?.body.farmLongitude
         }
-        if (req.file) {
+        if (req?.file) {
             fs.unlink('uploads/' + farm.farmPicture, () => { })
-            farm.farmPicture = req.file.filename
-            //console.log(req.file)
+            farm.farmPicture = req?.file.filename
+            //console.log(req?.file)
         }
         farm.save().then((farm) => {
             response.data = farmTransformer(farm)
