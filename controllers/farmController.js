@@ -15,139 +15,129 @@ exports.index = async function (req, res) {
         messages: [],
         data: {}
     }
-   
-    const filter=req.query.filter ? JSON.parse(req.query.filter) : {}
-        console.log("filter  ", typeof filter?.farmAvailable)
-        let visible=''
-        let userId = ''
 
-        try{
-            if (req.user.userTypeId == 2 ){
-                userId=req.user.id 
-               
- 
-                    }
-            else{
-                userId= {[Op.gte]: 1}
+    const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
+    console.log("filter  ", typeof filter?.farmAvailable)
+    let visible = ''
+    let userId = ''
+
+    try {
+        if (req.user.userTypeId == 2) {
+            userId = req.user.id
+
+
+        }
+        else {
+            userId = { [Op.gte]: 1 }
+
+        }
+        const farm = await models.Farms.findAll({
+
+            include: [{
+                model: models.Users
+            },
+            {
+                model: models.Crops,
+                as: "Crop"
+            },
+            {
+                model: models.Crops,
+                as: "LastCrop"
+            },
+            {
+                model: models.FarmKinds
+            },
+            {
+                model: models.Deal
+            },
+            {
+                model: models.Cities
+            }
+            ],
+
+            where: {
+
+                deleted: req.query.deleted == 1 ? 1 : 0,
+
 
             }
-            const farm = await models.Farms.findAll({
-       
-                include: [{
-                    model: models.Users
-                },
-                {
-                    model: models.Crops,
-                    as: "Crop"
-                },
-                {
-                    model: models.Crops,
-                    as: "LastCrop"
-                },
-                {
-                    model: models.FarmKinds
-                },
-                {
-                    model: models.Deal
-                },
-                {
-                    model: models.Cities
-                }
-                ],
-                
-                where:{
-                    userId:userId?userId:{[Op.gte]: 1},
 
-        
-                    cityId:filter.cityId? filter.cityId : {[Op.gte]: 1},
-                    cropId:filter.cropId ? filter.cropId :{[Op.gte]: 1},
-                    farmLastCropsId:filter.lastCropId ? filter.lastCropId :{[Op.gte]: 1} ,
-                    farmKindId:filter.farmKindId ? filter.farmKindId :{[Op.gte]: 1} ,
-                    farmAvailable:filter.farmAvailable ? filter.farmAvailable : {
-                        [Op.or]:[
-                            { [Op.eq]: 1},
-                            { [Op.eq]: 0}
-                        ]},
-                    deleted:req.query.deleted==1 ? 1 : 0,
+        })
+        console.log("userTypeIdiiiiii", userId)
 
-                    
-                }
-        
-            })
-            console.log("userTypeIdiiiiii",userId  )
 
-               
-                    if (Array.isArray(farm)) {
-                        // console.log(farm)
-                        response.data =farmsTransformers(farm)
-                        // console.log("farmmmm",farm)
-                        response.success = true
-                        res.send(response)
-                    }
-                // }).finally(() => {
-                //     res.send(response)
-               
+        if (Array.isArray(farm)) {
+            // console.log(farm)
+            response.data = farmsTransformers(farm)
+            // console.log("farmmmm",farm)
+            response.success = true
+            res.send(response)
         }
-        catch{
-            const farm = await models.Farms.findAll({
-       
-                include: [{
-                    model: models.Users
-                },
-                {
-                    model: models.Crops,
-                    as: "Crop"
-                },
-                {
-                    model: models.Crops,
-                    as: "LastCrop"
-                },
-                {
-                    model: models.FarmKinds
-                },
-                {
-                    model: models.Deal
-                },
-                {
-                    model: models.Cities
-                }
-                ],
-                
-                where:{
-                    userId:userId?userId:{[Op.gte]: 1},
+        // }).finally(() => {
+        //     res.send(response)
 
-        
-                    // cityId:filter.cityId? {[Op.gte]: 1} : filter.cityId,
-                    // cropId:filter.cropId ? {[Op.gte]: 1} : filter.cropId,
-                    // farmLastCropsId:filter.lastCropId ? {[Op.gte]: 1} : filter.lastCropId,
-                    // farmKindId:filter.farmKindId ? {[Op.gte]: 1} : filter.farmKindId,
-                    // farmAvailable:filter.farmAvailable ? filter.farmAvailable : {
-                    //     [Op.or]:[
-                    //         {
-                    //farmAvailable: {[Op.eq]: 1} }, { farmAvailable: {[Op.eq]: 0}}]},
-                    deleted:req.query.deleted==1 ? 1 : 0,
-                    
-                }
-        
-            })
-            console.log("userTypeIdiiiiii",userId  )
+    }
+    catch {
+        const farm = await models.Farms.findAll({
 
-               
-                    if (Array.isArray(farm)) {
-                        // console.log(farm)
-                        response.data =farmsTransformers(farm)
-                        // console.log("farmmmm",farm)
-                        response.success = true
-                        res.send(response)
-                    }
-                // }).finally(() => {
-                //     res.send(response)
-               
+            include: [{
+                model: models.Users
+            },
+            {
+                model: models.Crops,
+                as: "Crop"
+            },
+            {
+                model: models.Crops,
+                as: "LastCrop"
+            },
+            {
+                model: models.FarmKinds
+            },
+            {
+                model: models.Deal
+            },
+            {
+                model: models.Cities
+            }
+            ],
+
+            where: {
+                userId: userId ? userId : { [Op.gte]: 1 },
+                userId: userId ? userId : { [Op.gte]: 1 },
+                cityId: filter.cityId ? filter.cityId : { [Op.gte]: 1 },
+                cropId: filter.cropId ? filter.cropId : { [Op.gte]: 1 },
+                farmLastCropsId: filter.lastCropId ? filter.lastCropId : { [Op.gte]: 1 },
+                farmKindId: filter.farmKindId ? filter.farmKindId : { [Op.gte]: 1 },
+                farmAvailable: filter.farmAvailable ? filter.farmAvailable : {
+                    [Op.or]: [
+                        { [Op.eq]: 1 },
+                        { [Op.eq]: 0 }
+                    ]
+                },
+                deleted: req.query.deleted == 1 ? 1 : 0,
+
+            }
+
+        })
+        console.log("userTypeIdiiiiii", userId)
+
+
+        if (Array.isArray(farm)) {
+            // console.log(farm)
+            response.data = farmsTransformers(farm)
+            // console.log("farmmmm",farm)
+            response.success = true
+            res.send(response)
         }
-        }
-        
+        // }).finally(() => {
+        //     res.send(response)
 
-    
+    }
+}
+
+
+
 
 exports.store = async function (req, res) {
     var response = {
@@ -159,7 +149,7 @@ exports.store = async function (req, res) {
         response.messages.push("Please add a userId")
         response.success = false
     }
-    
+
     if (!req.body?.farmName) {
         response.messages.push("Please add afarm name")
         response.success = false
@@ -168,7 +158,7 @@ exports.store = async function (req, res) {
         response.messages.push("please add a city")
         response.success = false
     }
-    
+
     if (!req.body?.farmArea) {
         response.messages.push("Please add a farm area")
         response.success = false
@@ -405,18 +395,18 @@ exports.delete = async function (req, res) {
     }
     const updated = await models.Farms.findByPk(id)
     if (updated) {
-        if (req.query.deleted==1) {
+        if (req.query.deleted == 1) {
             updated.deleted = 1
-            console.log(" -------------- if req.query.deleted",req.query.deleted)
+            console.log(" -------------- if req.query.deleted", req.query.deleted)
 
         } else {
             updated.deleted = 0
-            console.log(" 000000000000 else req.query.deleted",req.query.deleted)
+            console.log(" 000000000000 else req.query.deleted", req.query.deleted)
 
         }
         updated.save().then((deal) => {
             response.messages.push('Done Successfully')
-            
+
             response.success = true
             response.data = deal
             res.send(response)
@@ -446,13 +436,13 @@ exports.FarmKindsindex = async function (req, res) {
         }],
 
     })
-            if (Array.isArray(farmKinds)) {
-                response.data = farmKinds
-                // console.log("farmmmm",farmKinds)
-                response.success = true
-                res.send(response)
-            }
-    
+    if (Array.isArray(farmKinds)) {
+        response.data = farmKinds
+        // console.log("farmmmm",farmKinds)
+        response.success = true
+        res.send(response)
+    }
+
 }
 
 exports.FarmKindsstore = async function (req, res) {
@@ -571,7 +561,7 @@ exports.FarmKindsdelete = async function (req, res) {
     }
     const updated = await models.FarmKinds.findByPk(id)
     if (updated) {
-        if (req.query.deleted==1) {
+        if (req.query.deleted == 1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0
@@ -606,8 +596,8 @@ exports.cropsIndex = function (req, res) {
                 as: "Crop"
             },
             {
-                model:models.Farms,
-                as:"LastCrop"
+                model: models.Farms,
+                as: "LastCrop"
             }
 
 
@@ -632,12 +622,13 @@ exports.cropsStore = async function (req, res, next) {
         messages: []
     }
 
-    
- console.log(req)
+
+    console.log(req)
     if (!req.body?.cropName) {
         response.messages.push("Please add a cropName")
-        response.success = false }
-   
+        response.success = false
+    }
+
     if (response.success === true) {
         await models.Crops.create({
             cropId: req.body.cropId,
@@ -745,7 +736,7 @@ exports.cropsDelete = async function (req, res, next) {
     }
     const updated = await models.Crops.findByPk(id)
     if (updated) {
-        if (req.query.deleted==1) {
+        if (req.query.deleted == 1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0
