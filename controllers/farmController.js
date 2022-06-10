@@ -18,18 +18,23 @@ exports.index = async function (req, res) {
 
     const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
     console.log("filter  ", typeof filter?.farmAvailable)
-    let visible = ''
+    let visible = 1
     let userId = ''
 
     try {
         if (req.user.userTypeId == 2) {
             userId = req.user.id
+            visible= {
+                [Op.or]: [
+                { [Op.eq]: 1 },
+                { [Op.eq]: 0 }
+            ]}
 
 
         }
         else {
             userId = { [Op.gte]: 1 }
-
+            visible= { [Op.eq]: 1 }
         }
         const farm = await models.Farms.findAll({
 
@@ -56,20 +61,22 @@ exports.index = async function (req, res) {
             ],
 
             where: {
-
+                
+                userId : userId,
                 deleted: req.query.deleted == 1 ? 1 : 0,
+                farmVisibiltiy:visible
 
 
             }
 
         })
-        console.log("userTypeIdiiiiii", userId)
 
 
         if (Array.isArray(farm)) {
             // console.log(farm)
             response.data = farmsTransformers(farm)
             // console.log("farmmmm",farm)
+            console.log("userTypeIdiiiiii", userId)
             response.success = true
             res.send(response)
         }
@@ -104,7 +111,7 @@ exports.index = async function (req, res) {
 
             where: {
                 userId: userId ? userId : { [Op.gte]: 1 },
-                userId: userId ? userId : { [Op.gte]: 1 },
+                // userId: userId ? userId : { [Op.gte]: 1 },
                 cityId: filter.cityId ? filter.cityId : { [Op.gte]: 1 },
                 cropId: filter.cropId ? filter.cropId : { [Op.gte]: 1 },
                 farmLastCropsId: filter.lastCropId ? filter.lastCropId : { [Op.gte]: 1 },
@@ -116,15 +123,15 @@ exports.index = async function (req, res) {
                     ]
                 },
                 deleted: req.query.deleted == 1 ? 1 : 0,
+                farmVisibiltiy:visible
 
             }
 
         })
-        console.log("userTypeIdiiiiii", userId)
+       // console.log("userTypeIdiiiiii", userId)
 
 
         if (Array.isArray(farm)) {
-            // console.log(farm)
             response.data = farmsTransformers(farm)
             // console.log("farmmmm",farm)
             response.success = true
