@@ -10,7 +10,7 @@ exports.index = function (req, res) {
         data: {}
     }
     const order = req.query.order == 'ASC' ? 'ASC' : 'DESC'
-    console.log("req.query.type",req.query.type)
+    console.log("req.query.type", req.query.type)
     models.Users.findAll({
         order: [
             ['userName', order]
@@ -23,9 +23,71 @@ exports.index = function (req, res) {
 
         ],
 
-        where:{
-            userTypeId: req.query.type ? req.query.type : {[Op.gte]: 1},
-            deleted:req.query.deleted==1 ? 1 : 0,
+        where: {
+            userTypeId: req.query.type ? req.query.type : { [Op.gte]: 1 },
+            deleted: req.query.deleted == 1 ? 1 : 0,
+
+        }
+    })
+        .then(users => {
+            if (Array.isArray(users)) {
+                response.data = users
+                response.success = true
+            } else {
+                response.messages.push("hi")
+            }
+        }).finally(() => {
+            res.send(response)
+        })
+}
+
+exports.userIndex = function (req, res) {
+    var response = {
+        success: false,
+        messages: [],
+        data: {}
+    }
+    if (req.query.type == "3") {
+        userTypeId = 3
+    } else if (req.query.type == "2") {
+        userTypeId = 2
+    }
+    else {
+        userTypeId = null
+    }
+    const order = req.query.order == 'ASC' ? 'ASC' : 'DESC'
+    const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
+
+    console.log("req.query.type", req.query.type)
+    models.Users.findAll({
+        attributes: ['id','cityId', 'userPhone', 'userEmail', 'userName'],
+        order: [
+            ['userName', order]
+        ],
+        include: [
+            { model: models.Cities },
+            { model: models.UserType },
+            {
+                model: models.Requests,
+                where: {
+                    cropId: filter.cropId ? filter.cropId : { [Op.gte]: 1 },
+                    farmKindId: filter.farmKindId ? filter.farmKindId : { [Op.gte]: 1 },
+
+                }
+
+            },
+            { model: models.Farms }
+
+        ],
+
+        where: {
+            userTypeId,
+            userName:filter.invName ? {
+                [Op.like]: "%" + filter.invName  + "%",
+              } :{
+                [Op.like]: "%" + '' + "%",
+              },
+            deleted: req.query.deleted == 1 ? 1 : 0,
 
         }
     })
@@ -126,10 +188,10 @@ exports.login = async function (req, res, next) {
                 response.messages.push("Login successful")
                 response.success = true
                 response.token = token
-                response.userId=user.id
-                response.userTypeId=user.userTypeId
-                
-                console.log("userTypeId=========",user.userTypeId)
+                response.userId = user.id
+                response.userTypeId = user.userTypeId
+
+                console.log("userTypeId=========", user.userTypeId)
 
                 res.send(response);
             } else {
@@ -176,8 +238,8 @@ exports.show = async function (req, res, next) {
 
 
         ],
-        where:{
-            deleted:req.query.deleted==1 ? 1 : 0,
+        where: {
+            deleted: req.query.deleted == 1 ? 1 : 0,
 
         }
     })
@@ -294,7 +356,7 @@ exports.delete = async function (req, res, next) {
     }
     const updated = await models.Users.findByPk(id)
     if (updated) {
-        if (req.query.deleted==1) {
+        if (req.query.deleted == 1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0
@@ -326,8 +388,8 @@ exports.indexUserType = function (req, res) {
         include: [
             models.Users
         ],
-        where:{
-            deleted:req.query.deleted==1 ? 1 : 0,
+        where: {
+            deleted: req.query.deleted == 1 ? 1 : 0,
 
         }
 
@@ -469,7 +531,7 @@ exports.deleteUserType = async function (req, res, next) {
     }
     const updated = await models.UserType.findByPk(id)
     if (updated) {
-        if (req.query.deleted==1) {
+        if (req.query.deleted == 1) {
             updated.deleted = 1
         } else {
             updated.deleted = 0

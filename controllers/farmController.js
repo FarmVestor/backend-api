@@ -56,14 +56,15 @@ exports.index = async function (req, res) {
                 where:{
                     userId:userId?userId:{[Op.gte]: 1},
         
-                    // cityId:filter.cityId? {[Op.gte]: 1} : filter.cityId,
-                    // cropId:filter.cropId ? {[Op.gte]: 1} : filter.cropId,
-                    // farmLastCropsId:filter.lastCropId ? {[Op.gte]: 1} : filter.lastCropId,
-                    // farmKindId:filter.farmKindId ? {[Op.gte]: 1} : filter.farmKindId,
-                    // farmAvailable:filter.farmAvailable ? filter.farmAvailable : {
-                    //     [Op.or]:[
-                    //         {
-                    //farmAvailable: {[Op.eq]: 1} }, { farmAvailable: {[Op.eq]: 0}}]},
+                    cityId:filter.cityId? filter.cityId : {[Op.gte]: 1},
+                    cropId:filter.cropId ? filter.cropId :{[Op.gte]: 1},
+                    farmLastCropsId:filter.lastCropId ? filter.lastCropId :{[Op.gte]: 1} ,
+                    farmKindId:filter.farmKindId ? filter.farmKindId :{[Op.gte]: 1} ,
+                    farmAvailable:filter.farmAvailable ? filter.farmAvailable : {
+                        [Op.or]:[
+                            { [Op.eq]: 1},
+                            { [Op.eq]: 0}
+                        ]},
                     deleted:req.query.deleted==1 ? 1 : 0,
                 }
         
@@ -271,15 +272,15 @@ exports.update = async function (req, res) {
         if (req.body.farmAvailable) {
             farm.farmAvailable = req.body.farmAvailable
         }
-        if (req.body.fatmKindId) {
-            farm.fatmKindId = req.body.farmKindId
+        if (req.body.farmKindId) {
+            farm.farmKindId = req.body.farmKindId
         }
         if (req.body.farmVisibiltiy) {
             farm.farmVisibiltiy = req.body.farmVisibiltiy
         }
         if (req.body.farmWaterSalinity) {
             farm.farmWaterSalinity = req.body.farmWaterSalinity
-        }
+        }  
         if (req.body.farmLastCropsId) {
             farm.farmLastCropsId = req.body.farmLastCropsId
         }
@@ -291,7 +292,7 @@ exports.update = async function (req, res) {
         }
         if (req.body.farmDescription) {
             farm.farmDescription = req.body.farmDescription
-        }
+        } 
         if (req.body.farmLicense) {
             farm.farmLicense = req.body.farmLicense
         }
