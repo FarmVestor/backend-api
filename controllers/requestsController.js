@@ -59,59 +59,68 @@ exports.store = async function (req, res) {
     const budget = req.body.budget
     const cropId = req.body.cropId
     const userId = req.body.userId
-
-
-    if (!farmKindId) {
-        response.messages.push('Please add a valid farm Kind Id')
-        response.success = false
-
-    }
-
-    if (!farmArea) {
-        response.messages.push('Please add a farm Area')
-        response.success = false
+    
+    try{
+        if (!farmKindId) {
+            response.messages.push('Please add a valid farm Kind Id')
+            response.success = false
+    
+        }
+    
+        if (!farmArea) {
+            response.messages.push('Please add a farm Area')
+            response.success = false
+          //  res.send(response)
+    
+    
+        }
+        if (!budget) {
+            response.messages.push('Please add a farm budget')
+            response.success = false
+          //  res.send(response)
+    
+    
+        }
+        if (!cropId) {
+            response.messages.push('Please add a farm cropId')
+            response.success = false
+            
+    
+        }
+        if (!userId) {
+            response.messages.push('Please add a farm userId')
+            response.success = false
+          //  res.send(response)
+            
+        }
+        if (response.success === true) {
+            await models.Requests.create({
+                farmKindId: req.body.farmKindId,
+                farmArea: req.body.farmArea,
+                budget: req.body.budget,
+                cropId: req.body.cropId,
+                userId: req.body.userId
+    
+    
+    
+            }).then(newReuest => {
+    
+                response.messages.push('Reuest added')
+                response.data = newReuest
+            })
+        }
         res.send(response)
-
-
-    }
-    if (!budget) {
-        response.messages.push('Please add a farm budget')
-        response.success = false
-        res.send(response)
-
-
-    }
-    if (!cropId) {
-        response.messages.push('Please add a farm cropId')
-        response.success = false
         
+    }catch{
+
+        res.send("make sure yoy inserted all fields")
 
     }
-    if (!userId) {
-        response.messages.push('Please add a farm userId')
-        response.success = false
-        res.send(response)
-        2
-    }
+
+    
 
 
-    if (response.success === true) {
-        await models.Requests.create({
-            farmKindId: req.body.farmKindId,
-            farmArea: req.body.farmArea,
-            budget: req.body.budget,
-            cropId: req.body.cropId,
-            userId: req.body.userId
-
-
-
-        }).then(newReuest => {
-
-            response.messages.push('Reuest added')
-            response.data = newReuest
-        })
-    }
-    res.send(response)
+    
 }
 exports.show = async function (req, res) {
     var response = {

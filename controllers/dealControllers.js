@@ -62,6 +62,7 @@ exports.index = function (req, res) {
        
         where: {
             investorId:investorId,
+            // farmerId:farmerId,
             deleted: req.query.deleted == 1 ? 1 : 0
         }
              })
