@@ -388,6 +388,47 @@ exports.update = async function (req, res, next) {
 
 }
 
+
+exports.updateProfile = async function (req, res, next) {
+    let response = {
+        messages: [],
+        success: true,
+        data: {}
+    }
+    const id = req.user.id
+  
+    const updated = await models.Users.findByPk(id)
+    if (updated) {
+        if (req.body.userName) {
+            updated.userName = req.body.userName
+        }
+        if (req.body.cityId) {
+            updated.cityId = req.body.cityId
+        }
+        if (req.body.userPhone) {
+            updated.userPhone = req.body.userPhone
+        }
+        if (req.body.userPassword) {
+            updated.userPassword = authService.hashPassword(req.body.userPassword)
+        }
+        if (req.body.userEmail) {
+            updated.userEmail = req.body.userEmail
+        }
+        updated.save().then((user) => {
+            response.messages.push('Successfully Updated')
+            response.success = true
+            response.data = user
+            res.send(response)
+        })
+    } else {
+        res.status(400);
+        response.messages.push('There was a problem updating the user.  Please check the user information.')
+        response.success = false
+        res.send(response)
+    }
+
+}
+
 exports.delete = async function (req, res, next) {
     let response = {
         messages: [],
@@ -444,6 +485,7 @@ exports.indexUserType = function (req, res) {
         ],
         where: {
             deleted: req.query.deleted == 1 ? 1 : 0,
+            id:{[Op.ne]:1}
 
         }
 
@@ -460,6 +502,35 @@ exports.indexUserType = function (req, res) {
         })
 }
 
+
+exports.adminIndexUserType = function (req, res) {
+    var response = {
+        success: false,
+        messages: [],
+        data: {}
+    }
+
+    models.UserType.findAll({
+        include: [
+            models.Users
+        ],
+        where: {
+            deleted: req.query.deleted == 1 ? 1 : 0,
+
+        }
+
+    })
+        .then(userType => {
+            if (Array.isArray(userType)) {
+                response.data = userType
+                response.success = true
+            } else {
+                response.messages.push("hi")
+            }
+        }).finally(() => {
+            res.send(response)
+        })
+}
 
 exports.showUserType = async function (req, res, next) {
     const id = req.params.id

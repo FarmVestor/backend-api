@@ -362,10 +362,11 @@ exports.update = async function (req, res) {
         if (req?.body.farmLongitude) {
             farm.farmLongitude = req?.body.farmLongitude
         }
+        console.log("req?.file-------------------",req)
+
         if (req?.file) {
             fs.unlink('uploads/' + farm.farmPicture, () => { })
             farm.farmPicture = req?.file.filename
-            //console.log(req?.file)
         }
         farm.save().then((farm) => {
             response.data = farmTransformer(farm)
