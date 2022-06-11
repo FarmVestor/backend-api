@@ -1,4 +1,3 @@
-const { request } = require('../app');
 var models = require('../models');
 var authService = require('../services/auth');
 const Sequelize = require('sequelize');

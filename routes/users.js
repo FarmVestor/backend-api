@@ -7,7 +7,9 @@ const { isDifferentAdmin } = require('../middlewares/isDifferentAdmin');
 router.get('/all',userController.userIndex);
 router.get('/',isAuthenticated,userController.index);
 router.post('/', userController.signup);
+router.post('/admin/login', userController.adminLogin);
 router.post('/login', userController.login);
+
 router.get('/show/:id',userController.show);
 router.put('/admin/:id', isAuthenticated, userController.update);
 

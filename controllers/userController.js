@@ -12,6 +12,7 @@ exports.index = function (req, res) {
     const order = req.query.order == 'ASC' ? 'ASC' : 'DESC'
     console.log("req.query.type", req.query.type)
     models.Users.findAll({
+        attributes: ['id', 'cityId', 'userPhone', 'userEmail', 'userName'],
         order: [
             ['userName', order]
         ],
@@ -60,7 +61,7 @@ exports.userIndex = function (req, res) {
 
     console.log("req.query.type", req.query.type)
     models.Users.findAll({
-        attributes: ['id','cityId', 'userPhone', 'userEmail', 'userName'],
+        attributes: ['id', 'cityId', 'userPhone', 'userEmail', 'userName'],
         order: [
             ['userName', order]
         ],
@@ -82,11 +83,11 @@ exports.userIndex = function (req, res) {
 
         where: {
             userTypeId,
-            userName:filter.invName ? {
-                [Op.like]: "%" + filter.invName  + "%",
-              } :{
+            userName: filter.invName ? {
+                [Op.like]: "%" + filter.invName + "%",
+            } : {
                 [Op.like]: "%" + '' + "%",
-              },
+            },
             deleted: req.query.deleted == 1 ? 1 : 0,
 
         }
@@ -209,6 +210,58 @@ exports.login = async function (req, res, next) {
         });
 }
 
+
+exports.adminLogin = async function (req, res, next) {
+    var response = {
+        success: false,
+        messages: [],
+        data: {}
+    }
+    models.Users.findOne({
+        where: {
+            userEmail: req.body.userEmail
+        }
+    }).then(user => {
+        console.log("usernn", user)
+        if (!user) {
+            response.messages.push("Login Failed")
+            response.success = false
+            res.send(response);
+        } else if (user.userTypeId == 1) {
+            let passwordMatch = authService.comparePasswords(req.body.userPassword, user.userPassword);
+            if (passwordMatch) {
+                let token = authService.signUser(user);
+                res.cookie("jwt", token); // <--- Adds token to response as a cookie
+                response.messages.push("Login successful")
+                response.success = true
+                response.token = token
+                response.userId = user.id
+                response.userTypeId = user.userTypeId
+
+                console.log("userTypeId=========", user.userTypeId)
+
+                res.send(response);
+            } else {
+                response.messages.push("Wrong password")
+                response.success = false
+                res.send(response);
+            }
+        } else {
+            response.messages.push("Sorry you are not allowed to access this dashboard")
+            response.success = false
+            res.send(response);
+
+        }
+    })
+        .catch(err => {
+            res.status(400);
+            response.messages.push("There was a problem in logging in. Make sure of the information you entered")
+            response.success = false
+            res.send(response)
+        });
+}
+
+
 exports.show = async function (req, res, next) {
     const id = req.params.id
     var response = {
@@ -223,6 +276,7 @@ exports.show = async function (req, res, next) {
         return
     }
     const user = await models.Users.findByPk(id, {
+        attributes: ['id', 'cityId', 'userPhone', 'userEmail', 'userName', 'userTypeId'],
         include: [
             { model: models.Cities },
             { model: models.UserType },

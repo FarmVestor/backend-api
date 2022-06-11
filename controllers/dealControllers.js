@@ -12,39 +12,39 @@ exports.index = function (req, res) {
     let farmerId = ''
     let investorId = ''
 
-    if(req.user.userTypeId == 3 ){
-         investorId=req.user.id
-         farmerId={[Op.gte]: 1}
+    if (req.user.userTypeId == 3) {
+        investorId = req.user.id
+        farmerId = { [Op.gte]: 1 }
 
     }
-    else if (req.user.userTypeId == 2 ){
-        investorId={[Op.gte]: 1}
-        farmerId=req.user.id
-           }
-    else{
-        investorId= {[Op.gte]: 1}
-        farmerId= {[Op.gte]: 1}
+    else if (req.user.userTypeId == 2) {
+        investorId = { [Op.gte]: 1 }
+        farmerId = req.user.id
+    }
+    else {
+        investorId = { [Op.gte]: 1 }
+        farmerId = { [Op.gte]: 1 }
 
     }
-    
-    console.log("investorid----------",investorId)
+
+    console.log("investorid----------", investorId)
 
 
-   console.log("req.query.deleted",req.query.deleted)
-   
-   // console.log("-----q----",typeof parseInt(req.query.id))
+    console.log("req.query.deleted", req.query.deleted)
+
+    // console.log("-----q----",typeof parseInt(req.query.id))
     models.Deal.findAll({
         order: [
             ["id", order]
         ],
-       
+
         include: [
             {
                 model: models.Farms,
                 include: [
                     {
                         model: models.Users,
-                        where: {id:farmerId}
+                        where: { id: farmerId }
                     },
 
                 ]
@@ -58,16 +58,16 @@ exports.index = function (req, res) {
                 as: 'investor'
             }
         ],
-        
-       
+
+
         where: {
-            investorId:investorId,
+            investorId: investorId,
             // farmerId:farmerId,
             deleted: req.query.deleted == 1 ? 1 : 0
         }
-             })
+    })
         .then(deals => {
-          //  console.log("-----d----",typeof deals[0].investorId)
+            //  console.log("-----d----",typeof deals[0].investorId)
 
             if (Array.isArray(deals)) {
                 response.data = deals
@@ -113,23 +113,43 @@ exports.store = async function (req, res, next) {
     }
 
 
-
+    const farmId = req.body?.farmId
     if (response.success === true) {
-        await models.Deal.create({
-            farmId: req.body.farmId,
-            agentId: req.body.agentId,
-            investorId: req.body.investorId,
-            dealPrice: req.body.dealPrice,
-            dealStatus: req.body.dealStatus,
 
-        }).then(newDeal => {
-            response.data = newDeal
-            response.messages.push('Deal Added Successfuly')
-
+        const farm = await models.Farms.findByPk(farmId, {
+            include: [
+                {
+                    model: models.Deal,
+                    where: {
+                        dealStatus: 1
+                    }
+                }
+            ],
         })
-    }
-    res.send(response)
+        if (farm.length == 0) {
+            await models.Deal.create({
+                farmId: req.body.farmId,
+                agentId: req.body.agentId,
+                investorId: req.body.investorId,
+                dealPrice: req.body.dealPrice,
+                dealStatus: req.body.dealStatus,
 
+            }).then(newDeal => {
+                response.data = newDeal
+                response.messages.push('Deal Added Successfuly')
+
+            })
+
+
+        } else {
+            response.messages.push('this farm already have a deal')
+            response.success = false
+
+        }
+        res.send(response)
+
+
+    }
 }
 
 exports.show = async function (req, res, next) {
@@ -257,11 +277,11 @@ exports.delete = async function (req, res, next) {
     }
     const updated = await models.Deal.findByPk(id)
     if (updated) {
-        if (req.query.deleted==1) {
-        
+        if (req.query.deleted == 1) {
+
             updated.deleted = 1
         } else {
-            console.log("else req.query.deleted",req.query.deleted)
+            console.log("else req.query.deleted", req.query.deleted)
             updated.deleted = 0
         }
         updated.save().then((deal) => {
