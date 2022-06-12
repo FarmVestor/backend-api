@@ -121,30 +121,32 @@ exports.store = async function (req, res, next) {
                 {
                     model: models.Deal,
                     where: {
-                        dealStatus: 1
+                        dealStatus: 1,
+                        deleted:0
                     }
                 }
             ],
         })
-        if (farm.length == 0) {
+        console.log('lengthhhhhhhhhh',farm)
+        if (farm) {
+            response.messages.push('this farm already have a deal')
+            response.success = false
+
+
+        } else {
+            
             await models.Deal.create({
-                farmId: req.body.farmId,
-                agentId: req.body.agentId,
-                investorId: req.body.investorId,
-                dealPrice: req.body.dealPrice,
-                dealStatus: req.body.dealStatus,
+                farmId: req?.body?.farmId,
+                agentId: req?.body?.agentId,
+                investorId: req?.body?.investorId,
+                dealPrice: req?.body?.dealPrice,
+                dealStatus: req?.body?.dealStatus,
 
             }).then(newDeal => {
                 response.data = newDeal
                 response.messages.push('Deal Added Successfuly')
 
             })
-
-
-        } else {
-            response.messages.push('this farm already have a deal')
-            response.success = false
-
         }
         res.send(response)
 

@@ -173,7 +173,8 @@ exports.login = async function (req, res, next) {
     }
     models.Users.findOne({
         where: {
-            userEmail: req.body.userEmail
+            userEmail: req.body.userEmail,
+            deleted:0
         }
     }).then(user => {
         console.log("usernn", user)
