@@ -57,7 +57,7 @@ exports.store = async function (req, res) {
     const farmArea = req.body.farmArea
     const budget = req.body.budget
     const cropId = req.body.cropId
-    const userId = req.body.userId
+    const userId = req.user.id
     
     try{
         if (!farmKindId) {

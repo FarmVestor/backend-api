@@ -156,7 +156,7 @@ exports.index = async function (req, res) {
 
 
 exports.store = async function (req, res) {
-    console.log("req?.file-------------------", req.files)
+    // console.log("req?.file-------------------", req.files)
 
     var response = {
         success: true,
@@ -229,7 +229,7 @@ exports.store = async function (req, res) {
         response.messages.push("Please add Latitude.")
         response.success = false
     }
-    if (!req.files) {
+    if (!req.file) {
         response.messages.push('Please add a photo')
         response.success = false
         res.send(response)

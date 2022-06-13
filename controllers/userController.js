@@ -264,6 +264,7 @@ exports.adminLogin = async function (req, res, next) {
 
 
 exports.show = async function (req, res, next) {
+    
     const id = req.params.id
     var response = {
         success: false,

@@ -38,13 +38,13 @@ const upload = multer({
   limits: { fileSize: 104857600 }
 })
 
-const multipleUpload = multer({storage: storage})
+// const multipleUpload = multer({storage: storage})
 
 router.get('/', isAuthenticated, farmController.index);
-// router.get('/all', farmController.index);
-router.post('/', isAuthenticated, multipleUpload.array('farmPicture', 12), farmController.store);
+router.get('/all', farmController.index);
+router.post('/', isAuthenticated, upload.single('farmPicture', 12), farmController.store);
 router.get('/:id', farmController.show);
-router.put('/:id', isAuthenticated, multipleUpload.array('farmPicture', 12), farmController.update);
+router.put('/:id', isAuthenticated, upload.single('farmPicture', 12), farmController.update);
 router.delete('/:id', isAuthenticated, farmController.delete);
 
 //the farm/farmKinds routes 
