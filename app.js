@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors =require('cors')
+const nodemailer = require("nodemailer");
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var farmsRouter = require('./routes/farms');
@@ -11,6 +13,8 @@ var addressesRouter = require('./routes/addresses');
 var requestsRouter = require('./routes/requests');
 var dealsRouter = require('./routes/deals');
 var reportsRouter = require('./routes/reports');
+var contactRouter = require('./routes/contacts');
+
 
 require('dotenv').config()
 
@@ -35,7 +39,10 @@ app.use('/addresses', addressesRouter);
 app.use('/requests', requestsRouter);
 app.use('/deals', dealsRouter);
 app.use('/reports', reportsRouter);
+app.use('/contacts', contactRouter);
 
+
+// app.listen(5000, () => console.log("Server Running"));
 
 
 // catch 404 and forward to error handler
