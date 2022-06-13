@@ -17,24 +17,33 @@ exports.index = async function (req, res) {
     }
 
     const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
-    console.log("filter  ", typeof filter?.farmAvailable)
+    // console.log("filter  ", typeof filter?.farmAvailable)
     let visible = 1
     let userId = ''
 
     try {
         if (req.user.userTypeId == 2) {
             userId = req.user.id
-            visible= {
+            visible = {
                 [Op.or]: [
-                { [Op.eq]: 1 },
-                { [Op.eq]: 0 }
-            ]}
+                    { [Op.eq]: 1 },
+                    { [Op.eq]: 0 }
+                ]
+            }
 
 
+        } else if (req.user.userTypeId == 1) {
+            userId = { [Op.gte]: 1 }
+            visible = {
+                [Op.or]: [
+                    { [Op.eq]: 1 },
+                    { [Op.eq]: 0 }
+                ]
+            }
         }
         else {
             userId = { [Op.gte]: 1 }
-            visible= { [Op.eq]: 1 }
+            visible = { [Op.eq]: 1 }
         }
         const farm = await models.Farms.findAll({
 
@@ -61,10 +70,10 @@ exports.index = async function (req, res) {
             ],
 
             where: {
-                
-                userId : userId,
+
+                userId: userId,
                 deleted: req.query.deleted == 1 ? 1 : 0,
-                farmVisibiltiy:visible
+                farmVisibiltiy: visible
 
 
             }
@@ -123,12 +132,12 @@ exports.index = async function (req, res) {
                     ]
                 },
                 deleted: req.query.deleted == 1 ? 1 : 0,
-                farmVisibiltiy:visible
+                farmVisibiltiy: visible
 
             }
 
         })
-       // console.log("userTypeIdiiiiii", userId)
+        // console.log("userTypeIdiiiiii", userId)
 
 
         if (Array.isArray(farm)) {
@@ -147,6 +156,8 @@ exports.index = async function (req, res) {
 
 
 exports.store = async function (req, res) {
+    // console.log("req?.file-------------------", req.files)
+
     var response = {
         success: true,
         messages: [],
@@ -229,7 +240,7 @@ exports.store = async function (req, res) {
         await models.Farms.create({
             userId: req.body.userId,
             farmName: req.body.farmName,
-            farmPicture: req.file.filename,
+            farmPicture: req.files.filename,
             cityId: req.body.cityId,
             farmArea: req.body.farmArea,
             cropId: req.body.cropId,
@@ -300,6 +311,8 @@ exports.show = async function (req, res) {
 }
 
 exports.update = async function (req, res) {
+    console.log("req?.file-------------------", req.files)
+
     var response = {
         success: true,
         messages: [],
@@ -362,10 +375,10 @@ exports.update = async function (req, res) {
         if (req?.body.farmLongitude) {
             farm.farmLongitude = req?.body.farmLongitude
         }
+
         if (req?.file) {
             fs.unlink('uploads/' + farm.farmPicture, () => { })
             farm.farmPicture = req?.file.filename
-            //console.log(req?.file)
         }
         farm.save().then((farm) => {
             response.data = farmTransformer(farm)
