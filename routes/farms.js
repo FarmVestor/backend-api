@@ -16,6 +16,7 @@ const storage = multer.diskStorage({
       cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
     }
   })
+
   const acceptFile= function(req,file,cb){
       const acceptedMimType=[
           'image/jpeg',
@@ -33,11 +34,18 @@ const storage = multer.diskStorage({
   const upload = multer({ storage: storage,
      fileFilter:acceptFile,
     limits:{fileSize:104857600}
+
     })
+
+    ///////
+
+
+///////
 
 router.get('/',isAuthenticated, farmController.index);
 router.get('/all',farmController.index);
-router.post('/',upload.single('farmPicture'), farmController.store);
+// router.post('/',upload.array('farmPicture', 12), farmController.store);
+router.post('/',upload.single('farmPicture'),farmController.store);
 router.get('/:id', farmController.show);
 router.put('/:id', upload.single('farmPicture'),farmController.update);
 router.delete('/:id', farmController.delete);
