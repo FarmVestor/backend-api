@@ -10,28 +10,66 @@ module.exports = {
       },
       
       userId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Users',
+  
+          },
+          key: 'id'
+        },
+        allowNull: false,
       },
       farmPicture: {
         type: Sequelize.STRING
       },
       cityId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Cities',
+  
+          },
+          key: 'id'
+        },
+        allowNull: false,
       },
       farmArea: {
         type: Sequelize.INTEGER
       },
       cropId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Crops',
+  
+          },
+          key: 'id'
+        },
+        allowNull: false,
       },
       farmLicense: {
         type: Sequelize.STRING
+      },
+      farmLongitude: {
+        type: Sequelize.DECIMAL
+      },
+      farmLatitude: {
+        type: Sequelize.DECIMAL
       },
       farmAvailable: {
         type: Sequelize.BOOLEAN
       },
       farmKindId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'FarmKinds',
+  
+          },
+          key: 'id'
+        },
+        allowNull: false,
       },
       farmVisibiltiy: {
         type: Sequelize.BOOLEAN
@@ -61,6 +99,11 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      deleted: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       }
     });
   },

@@ -13,7 +13,15 @@ module.exports = {
         type: Sequelize.STRING
       },
       countryId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Countries',
+  
+          },
+          key: 'id'
+        },
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -22,6 +30,11 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      deleted: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       }
     });
   },

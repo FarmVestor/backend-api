@@ -10,13 +10,21 @@ module.exports = {
       },
       
       cityId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Cities',
+  
+          },
+          key: 'id'
+        },
+        allowNull: false,
       },
       userName: {
         type: Sequelize.STRING
       },
       userPhone: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       userEmail: {
         type: Sequelize.STRING
@@ -25,7 +33,15 @@ module.exports = {
         type: Sequelize.STRING
       },
       userTypeId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'UserTypes',
+  
+          },
+          key: 'id'
+        },
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -34,6 +50,11 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      deleted: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       }
     });
   },

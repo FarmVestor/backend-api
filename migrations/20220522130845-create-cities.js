@@ -13,7 +13,15 @@ module.exports = {
         type: Sequelize.STRING
       },
       governrateId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Governrates',
+  
+          },
+          key: 'id'
+        },
+        allowNull: false,
       },
       latitude: {
         type: Sequelize.DECIMAL
@@ -28,6 +36,11 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      deleted: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       }
     });
   },

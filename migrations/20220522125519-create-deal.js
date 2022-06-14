@@ -9,13 +9,38 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       farmId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Farms',
+  
+          },
+          key: 'id'
+        },
+        allowNull: false,
       },
-      userId: {
-        type: Sequelize.INTEGER
+      agentId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Users',
+          
+          },
+          key: 'id'
+        },
+        allowNull: false,
+
       },
-      partenerId: {
-        type: Sequelize.INTEGER
+      investorId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Users',
+
+          },
+          key: 'id'
+        },
+        allowNull: false,
       },
       dealPrice: {
         type: Sequelize.INTEGER
@@ -30,6 +55,12 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      
+      deleted: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       }
     });
   },

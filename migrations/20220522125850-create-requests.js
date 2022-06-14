@@ -9,7 +9,15 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       farmKindId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'FarmKinds',
+  
+          },
+          key: 'id'
+        },
+        allowNull: false,
       },
       farmArea: {
         type: Sequelize.INTEGER
@@ -18,7 +26,26 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       cropId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Crops',
+  
+          },
+          key: 'id'
+        },
+        allowNull: false,
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Users',
+  
+          },
+          key: 'id'
+        },
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -27,6 +54,11 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      deleted: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       }
     });
   },
