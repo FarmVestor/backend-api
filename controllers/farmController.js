@@ -72,7 +72,7 @@ exports.index = async function (req, res) {
             where: {
 
                 userId: userId,
-                deleted: req.query.deleted == 1 ? 1 : 0,
+                deleted: req.query.deleted == 1 ? req.query.deleted  : 0,
                 farmVisibiltiy: visible
 
 
@@ -85,7 +85,7 @@ exports.index = async function (req, res) {
             // console.log(farm)
             response.data = farmsTransformers(farm)
             // console.log("farmmmm",farm)
-            console.log("userTypeIdiiiiii", userId)
+            // console.log("userTypeIdiiiiii", userId)
             response.success = true
             res.send(response)
         }
