@@ -240,7 +240,7 @@ exports.store = async function (req, res) {
         await models.Farms.create({
             userId: req.body.userId,
             farmName: req.body.farmName,
-            farmPicture: req.files.filename,
+            farmPicture: req.file.filename,
             cityId: req.body.cityId,
             farmArea: req.body.farmArea,
             cropId: req.body.cropId,
