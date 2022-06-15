@@ -110,14 +110,11 @@ exports.store = async function (req, res) {
         }
         res.send(response)
         
-    }catch{
-
-        res.send("make sure yoy inserted all fields")
+    }catch (e){
+console.error(e)
+        res.send("make sure you inserted all fields")
 
     }
-
-    
-
 
     
 }
