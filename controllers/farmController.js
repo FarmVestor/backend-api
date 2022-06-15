@@ -450,10 +450,10 @@ exports.FarmKindsindex = async function (req, res) {
 
 
     const farmKinds = await models.FarmKinds.findAll({
-        include: [{
-            model: models.Requests,
-            model: models.Farms
-        }],
+        // include: [{
+        //     model: models.Requests,
+        //     model: models.Farms
+        // }],
 
     })
     if (Array.isArray(farmKinds)) {
@@ -608,20 +608,20 @@ exports.cropsIndex = function (req, res) {
         data: {}
     }
     models.Crops.findAll({
-        include: [
+        // include: [
 
-            { model: models.Requests },
-            {
-                model: models.Farms,
-                as: "Crop"
-            },
-            {
-                model: models.Farms,
-                as: "LastCrop"
-            }
+        //     { model: models.Requests },
+        //     {
+        //         model: models.Farms,
+        //         as: "Crop"
+        //     },
+        //     {
+        //         model: models.Farms,
+        //         as: "LastCrop"
+        //     }
 
 
-        ]
+        // ]
 
     })
         .then(crops => {
