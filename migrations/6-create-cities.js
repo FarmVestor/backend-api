@@ -1,55 +1,43 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('Cities', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      
-      cityId: {
+     
+      cityName: {
+        type: Sequelize.STRING
+      },
+      governrateId: {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: 'Cities',
+            tableName: 'Governrates',
   
           },
           key: 'id'
         },
         allowNull: false,
       },
-      userName: {
-        type: Sequelize.STRING
+      latitude: {
+        type: Sequelize.DECIMAL
       },
-      userPhone: {
-        type: Sequelize.STRING
-      },
-      userEmail: {
-        type: Sequelize.STRING
-      },
-      userPassword: {
-        type: Sequelize.STRING
-      },
-      userTypeId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: 'UserTypes',
-  
-          },
-          key: 'id'
-        },
-        allowNull: false,
+      longitude: {
+        type: Sequelize.DECIMAL
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       deleted: {
         allowNull: false,
@@ -59,6 +47,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('Cities');
   }
 };

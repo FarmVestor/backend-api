@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('UserTypes', {
+    await queryInterface.createTable('Governrates', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -9,16 +9,29 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       
-      userType: {
+      governrateName: {
         type: Sequelize.STRING
+      },
+      countryId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Countries',
+  
+          },
+          key: 'id'
+        },
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       deleted: {
         allowNull: false,
@@ -28,6 +41,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('UserTypes');
+    await queryInterface.dropTable('Governrates');
   }
 };
