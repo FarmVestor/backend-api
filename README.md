@@ -6,7 +6,7 @@ backend-api
 
 [backend-api v1 documentation](https://documenter.getpostman.com/view/14500498/UzBgu9Vh)
 
-[React todo Repo using this API](https://github.com/FarmVestor/backend-api)
+[React Repo using this API](https://github.com/FarmVestor/backend-api)
 
 [Checkout the deployed react app using this API](https://ammar-todo-app.herokuapp.com/)
 
