@@ -2,13 +2,13 @@
 
 backend-api
 
-[API V1](https://greenhand.herokuapp.com/)
+[API V1](https://greenhand-api.herokuapp.com/)
 
 [backend-api v1 documentation](https://documenter.getpostman.com/view/14500498/UzBgu9Vh)
 
-[React todo Repo using this API](https://github.com/FarmVestor/backend-api)
+[React backend-api Repo using this API](https://github.com/FarmVestor/backend-api)
 
-[Checkout the deployed react app using this API](https://ammar-todo-app.herokuapp.com/)
+[Checkout the deployed react app using this API](https://greenhand-api.herokuapp.com/)
 
 ## tech stack used
 
@@ -16,6 +16,7 @@ backend-api
 2. MySQL
 3. Sequelize ORM
 4. Sequelize Migrations
+5. nodeMailer
 
 ## Requirements
 
