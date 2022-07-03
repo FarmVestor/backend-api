@@ -6,9 +6,9 @@ backend-api
 
 [backend-api v1 documentation](https://documenter.getpostman.com/view/14500498/UzBgu9Vh)
 
-[React Repo using this API](https://github.com/FarmVestor/backend-api)
+[React Repo using this API](https://github.com/FarmVestor/GreenHand-FrontEnd)
 
-[Checkout the deployed react app using this API](https://ammar-todo-app.herokuapp.com/)
+[Checkout the deployed react app using this API](https://greenhand-api.herokuapp.com/)
 
 ## tech stack used
 
