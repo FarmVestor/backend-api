@@ -32,3 +32,16 @@ backend-api
 4. sequelize db:migrate
 5. create a firebase project, and create storage from the console, and add the api credentials in the .env file
 6. npm run dev
+
+## DB Design: Tables:
+
+1. Users
+2. UserTypes
+3. Farms
+4. Deals
+5. Requests
+6. FarmKinds
+7. Crops
+8. Cities
+9. Governrates
+10. Countries
